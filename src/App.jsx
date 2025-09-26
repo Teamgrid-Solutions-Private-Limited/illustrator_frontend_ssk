@@ -24,7 +24,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <BrowserRouter basename="/illustrata/embedsolution">
+      <BrowserRouter basename="/illustrata/embedsolution/">
         <Routes>
           {/* Use relative paths, not full paths */}
           <Route path="/" element={<PrivateRoute element={<Codegenerator />} />} />
