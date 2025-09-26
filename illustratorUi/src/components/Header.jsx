@@ -72,7 +72,8 @@ const Header = () => {
                             backgroundColor: logoutInProgress ? "#cccccc" : "#016cd6",
                             borderRadius: "10px",
                             px: 3,
-                            fontWeight: "bold",
+                            fontWeight: 400,
+                            fontSize: "14px",
                             textTransform: "none",
                             "&:hover": {
                                 backgroundColor: logoutInProgress ? "#cccccc" : "#23455c",
