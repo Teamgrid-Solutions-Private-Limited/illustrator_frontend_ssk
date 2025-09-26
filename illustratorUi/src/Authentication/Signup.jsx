@@ -9,6 +9,7 @@ import {
   InputAdornment,
   IconButton,
   Snackbar,
+  Alert,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import {
@@ -133,9 +134,10 @@ const SignupPage = () => {
             alignItems: "stretch",
             justifyContent: "center",
             gap: { xs: 3, md: 0 },
-            minWidth: { xs: "100%", sm: 400 },
-            maxWidth: 400,
+            minWidth: { xs: 0, sm: 300 },
+            maxWidth: 380,
             width: "100%",
+            mx: { xs: 0.5, sm: "auto" }, 
           }}
         >
           <Box
@@ -401,9 +403,30 @@ const SignupPage = () => {
         open={snackbar.open}
         autoHideDuration={4000}
         onClose={handleSnackbarClose}
-        message={snackbar.message}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      />
+        sx={{
+          '& .MuiPaper-root': {
+            borderRadius: 2,
+            boxShadow: 4,
+          },
+        }}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbar.severity}
+          variant="filled"
+          sx={{
+            width: '100%',
+            borderRadius: 2,
+            boxShadow: 4,
+            fontWeight: 500,
+            fontSize: '1rem',
+            alignItems: 'center',
+          }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
       <Box
         sx={{
           width: "100%",
@@ -424,14 +447,14 @@ const SignupPage = () => {
           >
             ILLUSTRATA
           </Typography>
-          <Typography fontSize={11} sx={{ color: "#fff", mb: 0.5 }}>
+          <Typography fontSize={11} sx={{ color: "#D5E5FC", mb: 0.5 }}>
             Copyright © 2025 Illustrata. All Rights Reserved.{" "}
             <Box
               component="span"
               sx={{
                 textDecoration: "underline",
                 cursor: "pointer",
-                color: "#fff",
+                color: "#D5E5FC",
               }}
             >
               Statement of Independence
