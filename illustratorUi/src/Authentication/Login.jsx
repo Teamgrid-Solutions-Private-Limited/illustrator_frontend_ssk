@@ -72,7 +72,7 @@ const LoginPage = () => {
         });
         localStorage.setItem("token", response.data.token);
         setTimeout(() => {
-          navigate("/dashboard");
+          navigate("/");
         }, 1000);
       }
     } catch (err) {
