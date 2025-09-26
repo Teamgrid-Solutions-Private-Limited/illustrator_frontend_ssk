@@ -21,25 +21,23 @@ import {
   ListItemText,
   Checkbox,
   FormControlLabel,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { ContentCopy } from "@mui/icons-material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 const products = [
-  { id: Math.floor(100 + Math.random() * 900), name: "Demo, A Multi-Year Guaranteed Annuity" },
-  { id: Math.floor(100 + Math.random() * 900), name: "Demo, A Fixed Indexed Annuity" },
-  { id: Math.floor(100 + Math.random() * 900), name: "Staysail, A Multi-Year Guaranteed Annuity" },
-  { id: Math.floor(100 + Math.random() * 900), name: "Chartline, A Fixed Indexed Annuity" },
-  { id: Math.floor(100 + Math.random() * 900), name: "Product 5" },
-  { id: Math.floor(100 + Math.random() * 900), name: "Product 6" },
-    { id: Math.floor(100 + Math.random() * 900), name: "Product 7" },
-  { id: Math.floor(100 + Math.random() * 900), name: "Product 8" },
-  { id: Math.floor(100 + Math.random() * 900), name: "Product 9" },
-
-      { id: Math.floor(100 + Math.random() * 900), name: "Product 10" },
-
+  { id: 1103, name: "Demo, A Multi-Year Guaranteed Annuity" },
+  { id: 1041, name: "Demo, A Fixed Indexed Annuity" },
+  { id: 1069, name: "Staysail, A Multi-Year Guaranteed Annuity" },
+  { id: 1122, name: "Chartline, A Fixed Indexed Annuity" },
 ];
 
 const theme = createTheme({
@@ -59,10 +57,10 @@ const theme = createTheme({
 
 function Codegenerator() {
   const [selectedProducts, setSelectedProducts] = useState([]);
-  const [accentColor, setAccentColor] = useState("#1976d2");
-  const [buttonColor, setButtonColor] = useState("#dc004e");
-  const [hoverColor, setHoverColor] = useState("#ff4081");
-  const [baseColor, setBaseColor] = useState("#f5f5f5");
+  const [accentColor, setAccentColor] = useState("#131e27");
+  const [buttonColor, setButtonColor] = useState("#ffc000");
+  const [hoverColor, setHoverColor] = useState("#f8f9fa");
+  const [baseColor, setBaseColor] = useState("#EBF3F9");
   const [iframeUrl, setIframeUrl] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [showEmbedCode, setShowEmbedCode] = useState(false);
@@ -82,8 +80,8 @@ function Codegenerator() {
   }, [selectedProducts, accentColor, buttonColor, hoverColor, baseColor]);
 
   const handleProductToggle = (productId) => {
-    setSelectedProducts(prev => 
-      prev.includes(productId) 
+    setSelectedProducts(prev =>
+      prev.includes(productId)
         ? prev.filter(id => id !== productId)
         : [...prev, productId]
     );
@@ -98,7 +96,8 @@ function Codegenerator() {
   };
 
   const generateEmbedCode = () => {
-    return `<iframe id="crossDomainIframe" src="${iframeUrl}" width="100%" height="600" frameborder="0"></iframe>`;
+    return `<script src="https://demos.godigitalalchemy.com/illustrata/embed/autoheight.js"></script>
+<iframe id="crossDomainIframe" src="${iframeUrl}" width="100%" height="600" frameborder="0"></iframe>`;
   };
 
   const copyToClipboard = () => {
@@ -118,23 +117,34 @@ function Codegenerator() {
   };
 
   const handleGenerateEmbedCode = () => {
+    const productIds = selectedProducts.join(",");
+    // Updated base URL
+    const url = `https://demos.godigitalalchemy.com/illustrata/embed/illustration/?product=${productIds}&accentColor=${encodeURIComponent(
+      accentColor
+    )}&buttonColor=${encodeURIComponent(
+      buttonColor
+    )}&hoverColor=${encodeURIComponent(
+      hoverColor
+    )}&baseColor=${encodeURIComponent(baseColor)}`;
+    setIframeUrl(url);
     setShowEmbedCode(true);
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <Box
-        sx={{
-          minHeight: "100vh",
-          background: "linear-gradient(to bottom right, #ffffff, #cce0ff)",
-          py: 4,
-        }}
-      >
-        <Container maxWidth="lg" sx={{ height: "100%" }}>
-          <Header />
-          <Box sx={{ mt: 10, mb: 4 }}>
-            <Box sx={{ pt: 5 }}>
-              <Typography
+    <>
+      <ThemeProvider theme={theme}>
+        <Box
+          sx={{
+            minHeight: "100vh",
+            background: "linear-gradient(to bottom right, #ffffff, #cce0ff)",
+            py: 4,
+          }}
+        >
+          <Container maxWidth="lg" sx={{ height: "100%" }}>
+            <Header />
+            <Box sx={{ mt: 10, mb: 4 }}>
+              <Box sx={{ pt: 9 }}>
+                {/* <Typography
                 variant="h5"
                 gutterBottom
                 sx={{
@@ -146,79 +156,79 @@ function Codegenerator() {
                 }}
               >
                 Customize Your Embed
-              </Typography>
+              </Typography> */}
 
-              <Grid container spacing={6} sx={{ mb: 3, display: "flex", justifyContent: "space-between" }}>
-                {/* Left Side - Always Visible Product Selection */}
-                <Paper sx={{ p: 4, borderRadius: 2, flex: 1 }}> 
-                  <Typography sx={{ mb: 2, color: "#2c3e50", fontFamily: `'Segoe UI', Tahoma, Geneva, Verdana, sans-serif` }}>
-                    Configuration
-                  </Typography>
-                  <Grid item xs={12} sx={{ display: "flex", flexDirection: "column" }}>
-                    {/* Select All Checkbox */}
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={selectedProducts.length === products.length}
-                          indeterminate={selectedProducts.length > 0 && selectedProducts.length < products.length}
-                          onChange={handleSelectAll}
-                        />
-                      }
-                      label={`Select All (${selectedProducts.length}/${products.length} selected)`}
-                      sx={{ mb: 2 }}
-                    />
-                    
-                    {/* Always Visible Product List */}
-                    {/* Always Visible Product List (No Checkbox) */}
-<Paper 
-  variant="outlined" 
-  sx={{ 
-    maxHeight: 300, 
-    overflow: "auto",
-    p: 1,
-    border: "1px solid #ddd"
-  }}
->
-  <List dense sx={{ width: "100%" }}>
-    {products.map((product) => {
-      const selected = selectedProducts.includes(product.id);
-      return (
-        <ListItem
-          key={product.id}
-          sx={{
-            borderBottom: "1px solid #f0f0f0",
-            "&:last-child": { borderBottom: "none" },
-            py: 0.5,          // reduce vertical padding
-            px: 1,            // optional horizontal padding
-            cursor: "pointer",
-            fontSize: "0.875rem", // smaller text
-            backgroundColor: selected ? "#102442" : "transparent",
-            color: selected ? "white" : "inherit",
-            "&:hover": {
-              backgroundColor: selected ? "#102442" : "#f5f5f5",
-            }
-          }}
-          onClick={() => handleProductToggle(product.id)}
-        >
-          <ListItemText 
-            primary={product.name} 
-          
-            primaryTypographyProps={{ fontSize: "0.875rem" }}
-            secondaryTypographyProps={{ fontSize: "0.75rem" }}
-          />
-        </ListItem>
-      );
-    })}
-  </List>
-</Paper>
+                <Grid container spacing={6} sx={{ mb: 5, display: "flex", justifyContent: "space-between" }}>
+                  {/* Left Side - Always Visible Product Selection */}
+                  <Paper sx={{ p: 4, borderRadius: 2, flex: 1 }}>
+                    <Typography sx={{ mb: 2, color: "#2c3e50", fontFamily: `'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`, fontWeight: 600, fontSize: "20px" }}>
+                      Configuration
+                    </Typography>
+                    <Grid item xs={12} sx={{ display: "flex", flexDirection: "column" }}>
+                      {/* Select All Checkbox */}
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={selectedProducts.length === products.length}
+                            indeterminate={selectedProducts.length > 0 && selectedProducts.length < products.length}
+                            onChange={handleSelectAll}
+                          />
+                        }
+                        label={`Select All (${selectedProducts.length}/${products.length} selected)`}
+                        sx={{ mb: 2 }}
+                      />
+
+                      {/* Always Visible Product List */}
+                      {/* Always Visible Product List (No Checkbox) */}
+                      <Paper
+                        variant="outlined"
+                        sx={{
+                          maxHeight: 300,
+                          overflow: "auto",
+                          p: 1,
+                          border: "1px solid #ddd"
+                        }}
+                      >
+                        <List dense sx={{ width: "100%" }}>
+                          {products.map((product) => {
+                            const selected = selectedProducts.includes(product.id);
+                            return (
+                              <ListItem
+                                key={product.id}
+                                sx={{
+                                  borderBottom: "1px solid #f0f0f0",
+                                  "&:last-child": { borderBottom: "none" },
+                                  py: 0.5,          // reduce vertical padding
+                                  px: 1,            // optional horizontal padding
+                                  cursor: "pointer",
+                                  fontSize: "0.875rem", // smaller text
+                                  backgroundColor: selected ? "#102442" : "transparent",
+                                  color: selected ? "white" : "inherit",
+                                  "&:hover": {
+                                    backgroundColor: selected ? "#102442" : "#f5f5f5",
+                                  }
+                                }}
+                                onClick={() => handleProductToggle(product.id)}
+                              >
+                                <ListItemText
+                                  primary={product.name}
+
+                                  primaryTypographyProps={{ fontSize: "0.875rem" }}
+                                  secondaryTypographyProps={{ fontSize: "0.75rem" }}
+                                />
+                              </ListItem>
+                            );
+                          })}
+                        </List>
+                      </Paper>
 
 
-                    
-                    {/* Selected Products Chips */}
-                    {/* <Typography variant="subtitle2" sx={{ mt: 2, mb: 1, fontWeight: "bold" }}>
+
+                      {/* Selected Products Chips */}
+                      {/* <Typography variant="subtitle2" sx={{ mt: 2, mb: 1, fontWeight: "bold" }}>
                       Selected Products:
                     </Typography> */}
-                    {/* <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, minHeight: 60 }}>
+                      {/* <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, minHeight: 60 }}>
                       {selectedProducts.length > 0 ? (
                         selectedProducts.map((id) => {
                           const product = products.find((p) => p.id === id);
@@ -240,306 +250,383 @@ function Codegenerator() {
                         </Typography>
                       )}
                     </Box> */}
-                  </Grid>
-                </Paper>
+                    </Grid>
+                  </Paper>
 
-                {/* Right Side - Colors + Current Settings */}
-                <Paper sx={{ p: 4, borderRadius: 2, flex: 1 }}>
-                  <Grid item xs={12} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                    {/* Color Pickers */}
-                    <Box
-                      sx={{
-                        display: "grid",
-                        gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
-                        gap: 2,
-                      }}
-                    >
-                      <TextField
-                        fullWidth
-                        label="Accent Color"
-                        type="color"
-                        value={accentColor}
-                        onChange={(e) => setAccentColor(e.target.value)}
-                        InputLabelProps={{ shrink: true }}
-                      />
-                      <TextField
-                        fullWidth
-                        label="Button Color"
-                        type="color"
-                        value={buttonColor}
-                        onChange={(e) => setButtonColor(e.target.value)}
-                        InputLabelProps={{ shrink: true }}
-                      />
-                      <TextField
-                        fullWidth
-                        label="Hover Color"
-                        type="color"
-                        value={hoverColor}
-                        onChange={(e) => setHoverColor(e.target.value)}
-                        InputLabelProps={{ shrink: true }}
-                      />
-                      <TextField
-                        fullWidth
-                        label="Base Color"
-                        type="color"
-                        value={baseColor}
-                        onChange={(e) => setBaseColor(e.target.value)}
-                        InputLabelProps={{ shrink: true }}
-                      />
-                    </Box>
-
-                    {/* Current Settings */}
-                    <Paper
-                      variant="outlined"
-                      sx={{
-                        p: 2.5,
-                        background: "linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%)",
-                        border: "1px solid",
-                        borderColor: "primary.light",
-                        borderRadius: 2,
-                        boxShadow: "0 2px 8px rgba(25, 118, 210, 0.08)",
-                      }}
-                    >
-                      <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-                        Current Settings
-                      </Typography>
-
-                      {/* Products */}
-                      <Typography variant="subtitle2" sx={{ fontWeight: "bold", mb: 1 }}>
-                        Products Selected:
-                      </Typography>
-                      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 2 }}>
-                        {selectedProducts.length > 0 ? (
-                          selectedProducts.map((id) => {
-                            const product = products.find((p) => p.id === id);
-                            return (
-                              <Chip
-                                key={id}
-                                label={product?.name}
-                                size="small"
-                                color="primary"
-                                variant="filled"
-                                sx={{ fontWeight: "medium", background: "#11233E", color: "white" }}
-                              />
-                            );
-                          })
-                        ) : (
-                          <Typography variant="body2" color="text.secondary" fontStyle="italic">
-                            No products selected
-                          </Typography>
-                        )}
+                  {/* Right Side - Colors + Current Settings */}
+                  <Paper sx={{ p: 4, borderRadius: 2, flex: 1 }}>
+                    <Typography sx={{ mb: 2, color: "#2c3e50", fontFamily: `'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`, fontWeight: 600, fontSize: "20px" }}>
+                      Color Customization
+                    </Typography>
+                    <Grid item xs={12} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                      {/* Color Pickers */}
+                      <Box
+                        sx={{
+                          display: "grid",
+                          gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+                          gap: 2,
+                        }}
+                      >
+                        <TextField
+                          fullWidth
+                          label="Accent Color"
+                          type="color"
+                          value={accentColor}
+                          onChange={(e) => setAccentColor(e.target.value)}
+                          InputLabelProps={{ shrink: true }}
+                        />
+                        <TextField
+                          fullWidth
+                          label="Button Color"
+                          type="color"
+                          value={buttonColor}
+                          onChange={(e) => setButtonColor(e.target.value)}
+                          InputLabelProps={{ shrink: true }}
+                        />
+                        <TextField
+                          fullWidth
+                          label="Hover Color"
+                          type="color"
+                          value={hoverColor}
+                          onChange={(e) => setHoverColor(e.target.value)}
+                          InputLabelProps={{ shrink: true }}
+                        />
+                        <TextField
+                          fullWidth
+                          label="Base Color"
+                          type="color"
+                          value={baseColor}
+                          onChange={(e) => setBaseColor(e.target.value)}
+                          InputLabelProps={{ shrink: true }}
+                        />
                       </Box>
 
-                      {/* Colors */}
-                      <Grid container spacing={2}>
-                        <Grid item xs={6}>
-                          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                            <Box sx={{ width: 20, height: 20, borderRadius: "50%", bgcolor: accentColor, border: "2px solid white" }} />
-                            <Typography variant="subtitle2">Accent: {accentColor}</Typography>
-                          </Box>
-                        </Grid>
-                        <Grid item xs={6}>
-                          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                            <Box sx={{ width: 20, height: 20, borderRadius: "50%", bgcolor: buttonColor, border: "2px solid white" }} />
-                            <Typography variant="subtitle2">Button: {buttonColor}</Typography>
-                          </Box>
-                        </Grid>
-                        <Grid item xs={6}>
-                          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                            <Box sx={{ width: 20, height: 20, borderRadius: "50%", bgcolor: hoverColor, border: "2px solid white" }} />
-                            <Typography variant="subtitle2">Hover: {hoverColor}</Typography>
-                          </Box>
-                        </Grid>
-                        <Grid item xs={6}>
-                          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                            <Box sx={{ width: 20, height: 20, borderRadius: "50%", bgcolor: baseColor, border: "2px solid white" }} />
-                            <Typography variant="subtitle2">Base: {baseColor}</Typography>
-                          </Box>
-                        </Grid>
-                      </Grid>
-                    </Paper>
-                  </Grid>
-                </Paper>
-              </Grid>
+                      {/* Current Settings */}
+                      <Paper
+                        variant="outlined"
+                        sx={{
+                          p: 2.5,
+                          background: "linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%)",
+                          border: "1px solid",
+                          borderColor: "primary.light",
+                          borderRadius: 2,
+                          boxShadow: "0 2px 8px rgba(25, 118, 210, 0.08)",
+                        }}
+                      >
+                        <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
+                          Current Settings
+                        </Typography>
 
-              <Divider sx={{ my: 3 }} />
+                        {/* Products */}
+                        <Typography variant="subtitle2" sx={{ fontWeight: "bold", mb: 1 }}>
+                          Products Selected:
+                        </Typography>
+                        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 2 }}>
+                          {selectedProducts.length > 0 ? (
+                            selectedProducts.map((id) => {
+                              const product = products.find((p) => p.id === id);
+                              return (
+                                <Chip
+                                  key={id}
+                                  label={product?.name}
+                                  size="small"
+                                  color="primary"
+                                  variant="filled"
+                                  sx={{ fontWeight: "medium", background: "#11233E", color: "white" }}
+                                />
+                              );
+                            })
+                          ) : (
+                            <Typography variant="body2" color="text.secondary" fontStyle="italic">
+                              No products selected
+                            </Typography>
+                          )}
+                        </Box>
 
-              {/* Generate Embed Code Button */}
-              <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
-                <Button
-                  variant="contained"
-                  size="large"
-                  onClick={handleGenerateEmbedCode}
-                  disabled={selectedProducts.length === 0}
-                  sx={{
-                    background: "linear-gradient(320.1deg, #11233E 44.4%, #567BB0 97.6%)",
-                    px: 4,
-                    py: 1.5,
-                    fontWeight: '600',
-                    fontSize: '16px',
-                    '&:disabled': {
-                      background: '#cccccc',
-                      color: '#666666'
-                    }
-                  }}
-                >
-                  {selectedProducts.length === 0 ? 'Select Products First' : 'Generate Embed Code'}
-                </Button>
-              </Box>
+                        {/* Colors */}
+                        <Grid container spacing={2}>
+                          <Grid item xs={6}>
+                            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                              <Box sx={{ width: 20, height: 20, borderRadius: "50%", bgcolor: accentColor, border: "2px solid white" }} />
+                              <Typography variant="subtitle2">Accent: {accentColor}</Typography>
+                            </Box>
+                          </Grid>
+                          <Grid item xs={6}>
+                            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                              <Box sx={{ width: 20, height: 20, borderRadius: "50%", bgcolor: buttonColor, border: "2px solid white" }} />
+                              <Typography variant="subtitle2">Button: {buttonColor}</Typography>
+                            </Box>
+                          </Grid>
+                          <Grid item xs={6}>
+                            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                              <Box sx={{ width: 20, height: 20, borderRadius: "50%", bgcolor: hoverColor, border: "2px solid white" }} />
+                              <Typography variant="subtitle2">Hover: {hoverColor}</Typography>
+                            </Box>
+                          </Grid>
+                          <Grid item xs={6}>
+                            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                              <Box sx={{ width: 20, height: 20, borderRadius: "50%", bgcolor: baseColor, border: "2px solid white" }} />
+                              <Typography variant="subtitle2">Base: {baseColor}</Typography>
+                            </Box>
+                          </Grid>
+                        </Grid>
+                      </Paper>
+                    </Grid>
+                  </Paper>
+                </Grid>
 
-              {/* Embed Code and Preview Grid */}
-              {showEmbedCode && (
-                <Grid container spacing={6} sx={{ mt: 2 }}>
-                  <Grid item xs={12} md={6} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                    <Typography
-                      variant="h6"
-                      gutterBottom
+                {/* <Divider sx={{ my: 3 }} /> */}
+
+                {/* Generate Embed Code Button */}
+                {/* Generate Embed Code Button */}
+                <Box sx={{ display: "flex", justifyContent: "center", mb: 5 }}>
+                  <Button
+                    variant="contained"
+                    size="large"
+                    onClick={handleGenerateEmbedCode}
+                    disabled={selectedProducts.length === 0} // disable if no product selected
+                    sx={{
+                      background:
+                        selectedProducts.length === 0
+                          ? "grey" // show grey when disabled
+                          : "linear-gradient(320.1deg, #11233E 44.4%, #567BB0 97.6%)",
+                      px: 4,
+                      py: 1.5,
+                      fontWeight: "600",
+                      fontSize: "16px",
+                      textTransform: "none",
+                      "&.Mui-disabled": {
+                        background: "#ccc", // override MUI default disabled look
+                        color: "#666",
+                      },
+                    }}
+                  >
+                    Generate Embed Code
+                  </Button>
+                </Box>
+
+                {showEmbedCode && (
+                  <Box
+                    sx={{
+                      mt: 2,
+                      display: "flex",
+                      flexDirection: { xs: "column", md: "row" },
+                      gap: 4,
+                      width: "97.50%",
+                      minHeight: "500px",
+                    }}
+                  >
+                    {/* Left Side - Embed Code (50% width) */}
+                    <Box
                       sx={{
-                        color: "#11233E",
-                        fontFamily: "Rift",
-                        fontWeight: 400,
-                        fontStyle: "normal",
-                        fontSize: "20px",
-                      }}
-                    >
-                      Embed Code
-                    </Typography>
-                    <Paper
-                      variant="outlined"
-                      sx={{
-                        p: 2,
-                        bgcolor: "#f8f9fa",
-                        border: "1px solid #e9ecef",
-                        borderRadius: 1,
+                        flex: "1 1 50%",
                         display: "flex",
                         flexDirection: "column",
                         gap: 2,
+                        minWidth: { md: "50%" },
                       }}
                     >
-                      <Box
+
+                      <Paper
+                        variant="outlined"
                         sx={{
                           p: 2,
                           bgcolor: "#f8f9fa",
                           border: "1px solid #e9ecef",
                           borderRadius: 1,
-                          overflow: "auto",
-                          fontSize: "0.875rem",
-                          fontFamily: "'SF Mono', 'Monaco', 'Inconsolata', monospace",
-                          lineHeight: 1.6,
-                          color: "#2d3748",
-                          minHeight: '150px'
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 2,
+                          flex: 1,
                         }}
                       >
-                        <Box sx={{ color: "#e53e3e" }}>{`<`}<span style={{ color: "#3182ce" }}>iframe</span></Box>
-                        <Box sx={{ pl: 2, color: "#2d3748" }}>
-                          <span style={{ color: "#dd6b20" }}>id</span>=<span style={{ color: "#38a169" }}>"crossDomainIframe"</span>
-                        </Box>
-                        <Box sx={{ pl: 2, color: "#2d3748" }}>
-                          <span style={{ color: "#dd6b20" }}>src</span>=<span style={{ color: "#38a169" }}>"{iframeUrl}"</span>
-                        </Box>
-                        <Box sx={{ pl: 2, color: "#2d3748" }}>
-                          <span style={{ color: "#dd6b20" }}>width</span>=<span style={{ color: "#38a169" }}>"100%"</span>
-                        </Box>
-                        <Box sx={{ pl: 2, color: "#2d3748" }}>
-                          <span style={{ color: "#dd6b20" }}>height</span>=<span style={{ color: "#38a169" }}>"600"</span>
-                        </Box>
-                        <Box sx={{ pl: 2, color: "#2d3748" }}>
-                          <span style={{ color: "#dd6b20" }}>frameborder</span>=<span style={{ color: "#38a169" }}>"0"</span>
-                        </Box>
-                        <Box sx={{ pl: 2, color: "#2d3748" }}>
-                          <span style={{ color: "#dd6b20" }}>title</span>=<span style={{ color: "#38a169" }}>"Illustration Widget"</span>
-                        </Box>
-                        <Box sx={{ color: "#e53e3e" }}>{`></`}<span style={{ color: "#3182ce" }}>iframe</span>{`>`}</Box>
-                      </Box>
-
-                      <Button
-                        variant="contained"
-                        fullWidth
-                        sx={{
-                          background: "linear-gradient(320.1deg, #11233E 44.4%, #567BB0 97.6%)",
-                          py: 1.5,
-                          fontWeight: '600'
-                        }}
-                        startIcon={<ContentCopy />}
-                        onClick={copyToClipboard}
-                      >
-                        Copy Code
-                      </Button>
-                    </Paper>
-                  </Grid>
-
-                  <Grid item xs={12} md={6}>
-                    <Typography
-                      variant="h6"
-                      gutterBottom
-                      sx={{
-                        color: "#11233E",
-                        fontFamily: "Rift",
-                        fontWeight: 400,
-                        fontStyle: "normal",
-                        fontSize: "20px",
-                      }}
-                    >
-                      Live Preview
-                    </Typography>
-                    <Paper
-                      variant="outlined"
-                      sx={{
-                        p: 2,
-                        bgcolor: "background.default",
-                        height: '100%',
-                        minHeight: '300px',
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      {selectedProducts.length > 0 ? (
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                         sx={{ mb: 2, color: "#2c3e50", fontFamily: `'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`, fontWeight: 600, fontSize: "20px" }}
+                        >
+                          Embed Code
+                        </Typography>
+                        {/* Code Box */}
                         <Box
                           sx={{
-                            width: "100%",
-                            height: "400px",
-                            border: "1px solid",
-                            borderColor: "divider",
+                            p: 2,
+                            bgcolor: "#243241ff", // VS Code dark background
+                            border: "1px solid #2d2d2d",
                             borderRadius: 2,
-                            overflow: "hidden",
+                            overflowX: "hidden",
+                            overflowY: "auto",
+                            fontSize: "0.85rem",
+                            fontFamily: "'Fira Code', 'Consolas', 'Monaco', monospace", // monospaced font
+                            lineHeight: 1.6,
+                            color: "#d4d4d4", // default VS Code text
+                            minHeight: "200px",
+                            flex: 1,
+                            wordWrap: "break-word",
+                            whiteSpace: "pre-wrap",
+                            boxShadow: "inset 0 0 8px rgba(0,0,0,0.6)", // inner glow like editor
                           }}
                         >
-                          <iframe
-                            id="crossDomainIframe"
-                            src={iframeUrl}
-                            width="100%"
-                            height="100%"
-                            frameBorder="0"
-                            title="Embed Preview"
-                            style={{ borderRadius: 4 }}
-                          />
-                        </Box>
-                      ) : (
-                        <Typography variant="body2" color="text.secondary">
-                          Select at least one product to see preview
-                        </Typography>
-                      )}
-                    </Paper>
-                  </Grid>
-                </Grid>
-              )}
-            </Box>
-          </Box>
+                          <Box sx={{ color: "#569cd6" }}>{`<iframe`}</Box>
+                          <Box sx={{ pl: 2 }}>
+                            <span style={{ color: "#9cdcfe" }}>id</span>=
+                            <span style={{ color: "#ce9178" }}>"crossDomainIframe"</span>
+                          </Box>
+                          <Box sx={{ pl: 2 }}>
+                            <span style={{ color: "#9cdcfe" }}>src</span>=
+                            <span style={{ color: "#ce9178" }}>"{iframeUrl}"</span>
+                          </Box>
+                          <Box sx={{ pl: 2 }}>
+                            <span style={{ color: "#9cdcfe" }}>width</span>=
+                            <span style={{ color: "#ce9178" }}>"100%"</span>
+                          </Box>
+                          <Box sx={{ pl: 2 }}>
+                            <span style={{ color: "#9cdcfe" }}>height</span>=
+                            <span style={{ color: "#ce9178" }}>"600"</span>
+                          </Box>
+                          <Box sx={{ pl: 2 }}>
+                            <span style={{ color: "#9cdcfe" }}>frameborder</span>=
+                            <span style={{ color: "#ce9178" }}>"0"</span>
+                          </Box>
+                          <Box sx={{ pl: 2 }}>
+                            <span style={{ color: "#9cdcfe" }}>title</span>=
+                            <span style={{ color: "#ce9178" }}>"Illustration Widget"</span>
+                          </Box>
+                          <Box sx={{ color: "#569cd6" }}>{`></iframe>`}</Box>
 
-          <Snackbar
-            open={snackbarOpen}
-            autoHideDuration={3000}
-            onClose={handleSnackbarClose}
-            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-          >
-            <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: "100%" }}>
-              Embed code copied to clipboard!
-            </Alert>
-          </Snackbar>
-        </Container>
-      </Box>
-    </ThemeProvider>
+                          {/* Script tag */}
+                          <Box sx={{ color: "#569cd6" }}>{`<script`}</Box>
+                          <Box sx={{ pl: 2 }}>
+                            <span style={{ color: "#9cdcfe" }}>src</span>=
+                            <span style={{ color: "#ce9178" }}>
+                              "https://demos.godigitalalchemy.com/illustrata/embed/autoheight.js"
+                            </span>
+                          </Box>
+                          <Box sx={{ color: "#569cd6" }}>{`></script>`}</Box>
+                        </Box>
+
+
+                        {/* Copy Button */}
+                        <Button
+                          variant="contained"
+                          fullWidth
+                          sx={{
+                            background:
+                              "linear-gradient(320.1deg, #11233E 44.4%, #567BB0 97.6%)",
+                            py: 1.5,
+                            fontWeight: "600",
+                            textTransform: "none"
+                          }}
+                          startIcon={<ContentCopy />}
+                          onClick={copyToClipboard}
+                        >
+                          Copy Code
+                        </Button>
+                      </Paper>
+                    </Box>
+
+                    {/* Right Side - Live Preview (50% width) */}
+                    <Box
+                      sx={{
+                        flex: "1 1 50%",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 2,
+                        minWidth: { md: "50%" },
+                      }}
+                    >
+
+                      <Paper
+                        variant="outlined"
+                        sx={{
+                          p: 2,
+                          bgcolor: "background.default",
+                          flex: 1,
+                          minHeight: "300px",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Box sx={{ m: 2, pb: 11, mr: 5, width: "90%", height: "85%" }}>
+                          <Typography
+                            variant="h6"
+                            gutterBottom
+sx={{ mb: 2, color: "#2c3e50", fontFamily: `'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`, fontWeight: 600, fontSize: "20px" }}
+                          >
+                            Live Preview
+                          </Typography>
+                          {/* Always show iframe if iframeUrl exists, regardless of selectedProducts */}
+                          {iframeUrl ? (
+                            <Box
+                              sx={{
+                                width: "105%",
+                                height: "100%",
+                                minHeight: "400px",
+                                border: "1px solid",
+                                borderColor: "divider",
+                                borderRadius: 2,
+                                overflow: "hidden",
+                              }}
+                            >
+                              <iframe
+                                id="crossDomainIframe"
+                                src={iframeUrl}
+                                width="100%"
+                                height="100%"
+                                frameBorder="0"
+                                title="Embed Preview"
+                                style={{ borderRadius: 4 }}
+                              />
+                            </Box>
+                          ) : (
+                            <Box sx={{ textAlign: "center", p: 3 }}>
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                                gutterBottom
+                              >
+                                {selectedProducts && selectedProducts.length === 0
+                                  ? "Select at least one product to see preview"
+                                  : "Loading preview..."}
+                              </Typography>
+                              {/* Debug info - remove in production */}
+                              <Typography
+                                variant="caption"
+                                color="text.disabled"
+                                sx={{ mt: 1, display: "block" }}
+                              >
+                                Debug: iframeUrl = {iframeUrl || "undefined"}
+                              </Typography>
+                            </Box>
+                          )}
+                        </Box>
+                      </Paper>
+                    </Box>
+                  </Box>
+                )}
+              </Box>
+            </Box>
+
+            <Snackbar
+              open={snackbarOpen}
+              autoHideDuration={3000}
+              onClose={handleSnackbarClose}
+              anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            >
+              <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: "100%" }}>
+                Embed code copied to clipboard!
+              </Alert>
+            </Snackbar>
+
+          </Container>
+
+        </Box>
+
+      </ThemeProvider>
+      <Footer />
+
+    </>
   );
 }
 
