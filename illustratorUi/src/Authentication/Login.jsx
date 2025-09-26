@@ -10,11 +10,14 @@ import {
   IconButton,
   Snackbar,
   CircularProgress,
+  Alert,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Visibility, VisibilityOff, Email, Lock } from "@mui/icons-material";
 import { API_URL } from "../Api/Api";
 import axios from "axios";
+import logoFooter from "../assets/LogoFooter.svg"
+import logoHeader from "../assets/LogoHeader.svg"
 
 const LoginPage = () => {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -89,74 +92,53 @@ const LoginPage = () => {
   return (
     <Box
       sx={{
-        minHeight: "100vh",
-        background: "linear-gradient(180deg, #f5f7fa 0%, #1a3c6c 100%)",
+        height: "calc(100vh - 80px)",
+        background: "linear-gradient(-315deg, #f5f7fa 50%, #cce0ff 100%)",
         display: "flex",
         flexDirection: "column",
+        justifyContent: "center",
       }}
     >
+    
       <Box
         sx={{
-          flex: 1,
           display: "flex",
+          flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
           px: 2,
+          pb: { xs: 6, sm: 8 }, 
         }}
       >
+        <Box
+          component="img"
+          src={logoHeader}
+          alt="Logo"
+          sx={{
+            width: { xs: 120, sm: 160, md: 180 },
+            height: "auto",
+            mb: { xs: 2, sm: 5 },
+            alignSelf: "center",
+            maxWidth: "80vw",
+          }}
+        />
         <Paper
           elevation={8}
           sx={{
             borderRadius: 3,
-            p: { xs: 2, sm: 3, md: 3, lg: 5 },
+            p: { xs: 4, sm: 5, md: 5 },
             display: "flex",
             flexDirection: "column",
             boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.15)",
             alignItems: "stretch",
             justifyContent: "center",
             gap: { xs: 3, md: 0 },
-            minWidth: { xs: "100%", sm: 300 },
-            maxWidth: 380,
+            maxWidth: { xs: 280, sm: 360 },
             width: "100%",
+            mx: { xs: 0.5, sm: "auto" },
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              textAlign: "center",
-              mb: 4,
-            }}
-          >
-            <Typography
-              variant="h3"
-              sx={{
-                fontWeight: 700,
-                mb: 1,
-                color: "#102442",
-                letterSpacing: 1,
-                fontSize: { xs: "1.8rem", sm: "2rem" },
-              }}
-            >
-              <Box component="span" sx={{ color: "#567BB0" }}>
-                Welcome
-              </Box>{" "}
-              Back!
-            </Typography>
-            <Typography
-              variant="subtitle1"
-              sx={{
-                fontWeight: 500,
-                color: "#4e4e4eff",
-                fontSize: { xs: "0.7rem", sm: "0.8rem" },
-              }}
-            >
-              Please sign in to your account to continue.
-            </Typography>
-          </Box>
-
+          
           <Box
             component="form"
             noValidate
@@ -278,22 +260,7 @@ const LoginPage = () => {
               {loading ? "Signing In..." : "Sign In"}
             </Button>
 
-            <Box sx={{ textAlign: "center" }}>
-              Don't have an account?
-              <Button
-                onClick={() => navigate("/signup")}
-                color="primary"
-                sx={{
-                  fontWeight: 500,
-                  textTransform: "none",
-                  "&:hover": {
-                    background: "transparent",
-                  },
-                }}
-              >
-                Sign Up
-              </Button>
-            </Box>
+          
           </Box>
         </Paper>
       </Box>
@@ -302,38 +269,73 @@ const LoginPage = () => {
         open={snackbar.open}
         autoHideDuration={4000}
         onClose={handleSnackbarClose}
-        message={snackbar.message}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      />
+        sx={{
+          '& .MuiPaper-root': {
+            borderRadius: 2,
+            boxShadow: 4,
+          },
+        }}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbar.severity}
+          variant="filled"
+          sx={{
+            width: '100%',
+            borderRadius: 2,
+            boxShadow: 4,
+            fontWeight: 500,
+            fontSize: '1rem',
+            alignItems: 'center',
+          }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
 
       <Box
         sx={{
           width: "100%",
           background: "linear-gradient(90deg, #1a3c6c 0%, #3a6db3 100%)",
-          py: 2,
+          py: { xs: 2, sm: 3, md: 4 },
           textAlign: "center",
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          zIndex: 1200,
+          borderTop: "1.5px solid #e3eafc",
+          boxShadow: "0 -2px 12px 0 rgba(31, 38, 135, 0.07)",
         }}
       >
-        <Container maxWidth="md">
+        <Container maxWidth="md" sx={{ px: { xs: 1, sm: 2 } }}>
           <Typography
             sx={{
-              fontSize: "18px",
+              fontSize: { xs: "15px", sm: "18px" },
               fontWeight: "bold",
               letterSpacing: 2,
               color: "#D7D7D7",
               mb: 1,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            ILLUSTRATA
+            <Box
+              component="img"
+              src={logoFooter}
+              sx={{ width: { xs: 110, sm: 150, md: 170 }, height: "auto", maxWidth: "80vw" }}
+              alt="Footer Logo"
+            />
           </Typography>
-          <Typography fontSize={11} sx={{ color: "#fff", mb: 0.5 }}>
-            Copyright © 2025 Illustrata. All Rights Reserved.{" "}
+          <Typography sx={{ color: "#D5E5FC", mb: 0.5, fontSize: { xs: "11px", sm: "14px" }, fontWeight: 400, wordBreak: "break-word" }}>
+            Copyright © 2025 Illustrata. All Rights Reserved.{' '}
             <Box
               component="span"
               sx={{
                 textDecoration: "underline",
                 cursor: "pointer",
-                color: "#fff",
+                color: "#D5E5FC",
               }}
             >
               Statement of Independence
