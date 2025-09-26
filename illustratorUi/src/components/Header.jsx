@@ -1,65 +1,107 @@
-import React from "react";
-import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
+import React, { useState } from "react";
+import { 
+  AppBar, 
+  Toolbar, 
+  Typography, 
+  Button, 
+  Box, 
+  Snackbar,
+  Alert 
+} from "@mui/material";
 import illustrataLogo from '../../public/Link.svg'; // Ensure you have a logo image in the specified path
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
     const navigate = useNavigate();
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [logoutInProgress, setLogoutInProgress] = useState(false);
+
+    const handleLogout = () => {
+        if (logoutInProgress) return; // Prevent multiple clicks
+        
+        setLogoutInProgress(true);
+        setSnackbarOpen(true);
+        
+        // Show snackbar for 2 seconds before redirecting
+        setTimeout(() => {
+            localStorage.clear();
+            navigate("/login");
+        }, 2000);
+    };
+
+    const handleSnackbarClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbarOpen(false);
+    };
 
     return (
-        <AppBar
-            position="absolute"   
-            elevation={1}
-            sx={{
-                background: "white",
-                color: "#0d1b3d",
-                borderRadius: "20px",
-                // boxShadow: "0 5px 15px rgba(0,0,0,0.1)",
-                px: 4,
-                py: 1,
-                mt: 2,
-                top: 25,
-                left: 0,
-                right: 0,
-                margin: "0 auto",
-                maxWidth: "1160px",
+        <>
+            <AppBar
+                position="absolute"   
+                elevation={1}
+                sx={{
+                    background: "white",
+                    color: "#0d1b3d",
+                    borderRadius: "20px",
+                    px: 4,
+                    py: 2,
+                    mt: 2,
+                    top: 25,
+                    left: 0,
+                    right: 0,
+                    margin: "0 auto",
+                    maxWidth: "1160px",
+                }}
+            >
+                <Toolbar sx={{ justifyContent: "space-between" }}>
+                    {/* Left Logo */}
+                    <Box
+                        component="img"
+                        src={illustrataLogo}
+                        alt="Illustrata Logo"
+                        sx={{ height: 30 }}
+                    />
 
-            }}
-        >
-            <Toolbar sx={{ justifyContent: "space-between" }}>
-                {/* Left Logo */}
+                    {/* Right Side - Button */}
+                    <Button
+                        variant="contained"
+                        disabled={logoutInProgress}
+                        sx={{
+                            backgroundColor: logoutInProgress ? "#cccccc" : "#016cd6",
+                            borderRadius: "10px",
+                            px: 3,
+                            fontWeight: 400,
+                            fontSize: "14px",
+                            textTransform: "none",
+                            "&:hover": {
+                                backgroundColor: logoutInProgress ? "#cccccc" : "#23455c",
+                            },
+                        }}
+                        onClick={handleLogout}
+                    >
+                        {logoutInProgress ? "Logging Out..." : "Log Out"}
+                    </Button>
+                </Toolbar>
+            </AppBar>
 
-                <Box
-                    component="img"
-                    src={illustrataLogo}
-                    alt="Illustrata Logo"
-                    sx={{ height: 30 }}
-                />
-
-                {/* Right Side - Button */}
-                <Button
-                    variant="contained"
-                    sx={{
-                        backgroundColor: "#1976d2",
-                        borderRadius: "10px",
-                        px: 3,
-                        fontWeight: "bold",
-                        textTransform: "none",
-                        "&:hover": {
-                            backgroundColor: "#115293",
-                        },
-
-                    }}
-                    onClick={() => {
-                        localStorage.clear();
-                        navigate("/login")
-                    }}
-
+            {/* Snackbar for logout message */}
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={2000}
+                onClose={handleSnackbarClose}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            >
+                <Alert 
+                    onClose={handleSnackbarClose} 
+                    severity="info" 
+                    sx={{ width: "100%" }}
                 >
-                    Log Out
-                </Button>
-            </Toolbar>
-        </AppBar>
+                    Logging out...
+                </Alert>
+            </Snackbar>
+        </>
     );
 };
 
