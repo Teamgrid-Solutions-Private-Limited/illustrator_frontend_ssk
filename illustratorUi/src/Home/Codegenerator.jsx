@@ -22,11 +22,17 @@ import {
   Tabs,
   Tab,
   Grid,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
 import { ContentCopy } from "@mui/icons-material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { IconButton } from "@mui/material";
 import { Logout } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 const products = [
   { id: 1, name: "Product 1" },
   { id: 2, name: "Product 2" },
@@ -60,6 +66,10 @@ function Codegenerator() {
   const [iframeUrl, setIframeUrl] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [tabValue, setTabValue] = useState(0);
+  const token = localStorage.getItem("token");
+  const navigate = useNavigate();
+  const [openDialog, setOpenDialog] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   // Generate iframe URL whenever settings change
   useEffect(() => {
@@ -101,6 +111,16 @@ function Codegenerator() {
     setSnackbarOpen(false);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setOpenSnackbar(true);
+    setOpenDialog(false);
+
+    setTimeout(() => {
+      navigate("/login");
+    }, 1000);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Box
@@ -136,9 +156,7 @@ function Codegenerator() {
             {/* Logout Button */}
             <IconButton
               color="inherit"
-              onClick={() => {
-                console.log("Logout clicked"); // Replace with your logout logic
-              }}
+              onClick={() => setOpenDialog(true)} // ✅ open the confirmation dialog
             >
               <Logout />
             </IconButton>
@@ -170,7 +188,7 @@ function Codegenerator() {
                     textColor: "#11233E",
                     fontFamily: "Rift",
                     fontWeight: 400,
-                    fontStyle: "normal", 
+                    fontStyle: "normal",
                     fontSize: "24px",
                     mb: 3,
                   }}
@@ -539,35 +557,42 @@ function Codegenerator() {
             )}
 
             {/* Embed Code Tab */}
-          {tabValue === 2 && (
-  <Box sx={{ p: 3, height: '100%', display: 'flex', flexDirection: 'column' }}>
-    <Typography
-      variant="h6"
-      gutterBottom
-      sx={{
-        color: "#11233E",
-        fontFamily: "Rift",
-        fontWeight: 400,
-        fontStyle: "normal",
-        fontSize: "24px",
-        mb: 2
-      }}
-    >
-      Embed Code
-    </Typography>
-    
-    <Paper 
-      variant="outlined" 
-      sx={{ 
-        p: 2, 
-        mb: 2, 
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '400px'
-      }}
-    >
-      {/* <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+            {tabValue === 2 && (
+              <Box
+                sx={{
+                  p: 3,
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  gutterBottom
+                  sx={{
+                    color: "#11233E",
+                    fontFamily: "Rift",
+                    fontWeight: 400,
+                    fontStyle: "normal",
+                    fontSize: "24px",
+                    mb: 2,
+                  }}
+                >
+                  Embed Code
+                </Typography>
+
+                <Paper
+                  variant="outlined"
+                  sx={{
+                    p: 2,
+                    mb: 2,
+                    flex: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                    minHeight: "400px",
+                  }}
+                >
+                  {/* <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
         <Typography variant="subtitle1" sx={{ fontWeight: '600' }}>
           HTML Embed Code
         </Typography>
@@ -578,63 +603,81 @@ function Codegenerator() {
           variant="outlined"
         />
       </Box> */}
-      
-      <Box
-        sx={{
-          p: 2,
-          bgcolor: "#f8f9fa",
-          border: "1px solid #e9ecef",
-          borderRadius: 1,
-          overflow: "auto",
-          fontSize: "0.875rem",
-          mb: 2,
-          flex: 1,
-          fontFamily: "'SF Mono', 'Monaco', 'Inconsolata', monospace",
-          lineHeight: 1.6,
-          color: "#2d3748"
-        }}
-      >
-        <Box sx={{ color: "#e53e3e" }}>{`<`}<span style={{ color: "#3182ce" }}>iframe</span></Box>
-        <Box sx={{ pl: 2, color: "#2d3748" }}>
-          <span style={{ color: "#dd6b20" }}>id</span>=<span style={{ color: "#38a169" }}>"crossDomainIframe"</span>
-        </Box>
-        <Box sx={{ pl: 2, color: "#2d3748" }}>
-          <span style={{ color: "#dd6b20" }}>src</span>=<span style={{ color: "#38a169" }}>"{iframeUrl}"</span>
-        </Box>
-        <Box sx={{ pl: 2, color: "#2d3748" }}>
-          <span style={{ color: "#dd6b20" }}>width</span>=<span style={{ color: "#38a169" }}>"100%"</span>
-        </Box>
-        <Box sx={{ pl: 2, color: "#2d3748" }}>
-          <span style={{ color: "#dd6b20" }}>height</span>=<span style={{ color: "#38a169" }}>"600"</span>
-        </Box>
-        <Box sx={{ pl: 2, color: "#2d3748" }}>
-          <span style={{ color: "#dd6b20" }}>frameborder</span>=<span style={{ color: "#38a169" }}>"0"</span>
-        </Box>
-        <Box sx={{ pl: 2, color: "#2d3748" }}>
-          <span style={{ color: "#dd6b20" }}>title</span>=<span style={{ color: "#38a169" }}>"Illustration Widget"</span>
-        </Box>
-        <Box sx={{ color: "#e53e3e" }}>{`></`}<span style={{ color: "#3182ce" }}>iframe</span>{`>`}</Box>
-      </Box>
-      
-      <Box sx={{ display: 'flex', gap: 1 }}>
-        <Button
-          variant="contained"
-          sx={{
-            flex: 1,
-            background: "linear-gradient(320.1deg, #11233E 44.4%, #567BB0 97.6%)",
-            py: 1.5,
-            fontWeight: '600'
-          }}
-          startIcon={<ContentCopy />}
-          onClick={copyToClipboard}
-        >
-          Copy Code
-        </Button>
-      </Box>
-    </Paper>
-    
-  </Box>
-)}
+
+                  <Box
+                    sx={{
+                      p: 2,
+                      bgcolor: "#f8f9fa",
+                      border: "1px solid #e9ecef",
+                      borderRadius: 1,
+                      overflow: "auto",
+                      fontSize: "0.875rem",
+                      mb: 2,
+                      flex: 1,
+                      fontFamily:
+                        "'SF Mono', 'Monaco', 'Inconsolata', monospace",
+                      lineHeight: 1.6,
+                      color: "#2d3748",
+                    }}
+                  >
+                    <Box sx={{ color: "#e53e3e" }}>
+                      {`<`}
+                      <span style={{ color: "#3182ce" }}>iframe</span>
+                    </Box>
+                    <Box sx={{ pl: 2, color: "#2d3748" }}>
+                      <span style={{ color: "#dd6b20" }}>id</span>=
+                      <span style={{ color: "#38a169" }}>
+                        "crossDomainIframe"
+                      </span>
+                    </Box>
+                    <Box sx={{ pl: 2, color: "#2d3748" }}>
+                      <span style={{ color: "#dd6b20" }}>src</span>=
+                      <span style={{ color: "#38a169" }}>"{iframeUrl}"</span>
+                    </Box>
+                    <Box sx={{ pl: 2, color: "#2d3748" }}>
+                      <span style={{ color: "#dd6b20" }}>width</span>=
+                      <span style={{ color: "#38a169" }}>"100%"</span>
+                    </Box>
+                    <Box sx={{ pl: 2, color: "#2d3748" }}>
+                      <span style={{ color: "#dd6b20" }}>height</span>=
+                      <span style={{ color: "#38a169" }}>"600"</span>
+                    </Box>
+                    <Box sx={{ pl: 2, color: "#2d3748" }}>
+                      <span style={{ color: "#dd6b20" }}>frameborder</span>=
+                      <span style={{ color: "#38a169" }}>"0"</span>
+                    </Box>
+                    <Box sx={{ pl: 2, color: "#2d3748" }}>
+                      <span style={{ color: "#dd6b20" }}>title</span>=
+                      <span style={{ color: "#38a169" }}>
+                        "Illustration Widget"
+                      </span>
+                    </Box>
+                    <Box sx={{ color: "#e53e3e" }}>
+                      {`></`}
+                      <span style={{ color: "#3182ce" }}>iframe</span>
+                      {`>`}
+                    </Box>
+                  </Box>
+
+                  <Box sx={{ display: "flex", gap: 1 }}>
+                    <Button
+                      variant="contained"
+                      sx={{
+                        flex: 1,
+                        background:
+                          "linear-gradient(320.1deg, #11233E 44.4%, #567BB0 97.6%)",
+                        py: 1.5,
+                        fontWeight: "600",
+                      }}
+                      startIcon={<ContentCopy />}
+                      onClick={copyToClipboard}
+                    >
+                      Copy Code
+                    </Button>
+                  </Box>
+                </Paper>
+              </Box>
+            )}
           </Paper>
         </Container>
 
@@ -651,6 +694,38 @@ function Codegenerator() {
             sx={{ width: "100%" }}
           >
             Embed code copied to clipboard!
+          </Alert>
+        </Snackbar>
+        <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+          <DialogTitle>Confirm Logout</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to logout?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpenDialog(false)} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleLogout} color="error">
+              Logout
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Snackbar */}
+        <Snackbar
+          open={openSnackbar}
+          autoHideDuration={2000}
+          onClose={() => setOpenSnackbar(false)}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        >
+          <Alert
+            onClose={() => setOpenSnackbar(false)}
+            severity="success"
+            sx={{ width: "100%" }}
+          >
+            Logged out successfully!
           </Alert>
         </Snackbar>
       </Box>
