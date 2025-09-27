@@ -138,7 +138,6 @@ const LoginPage = () => {
             mx: { xs: 0.5, sm: "auto" },
           }}
         >
-          
           <Box
             component="form"
             noValidate
@@ -259,8 +258,7 @@ const LoginPage = () => {
             >
               {loading ? "Signing In..." : "Sign In"}
             </Button>
-
-          
+         
           </Box>
         </Paper>
       </Box>
