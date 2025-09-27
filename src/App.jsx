@@ -13,20 +13,15 @@ const theme = createTheme({
     fontWeightBold: 700,
   }
 })
-
 function App() {
-
   const PrivateRoute = ({ element }) => {
     const token = localStorage.getItem('token');
-    // Note: the path here should be relative to basename
     return token ? element : <Navigate to="/login" replace />;
   };
-
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter basename="/illustrata/embedsolution/">
         <Routes>
-          {/* Use relative paths, not full paths */}
           <Route path="/" element={<PrivateRoute element={<Codegenerator />} />} />
           <Route path="/login" element={<Login />} />
         </Routes>

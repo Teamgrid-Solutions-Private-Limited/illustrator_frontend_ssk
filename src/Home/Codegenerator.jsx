@@ -21,13 +21,7 @@ import {
   ListItemText,
   Checkbox,
   FormControlLabel,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import { ContentCopy } from "@mui/icons-material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Header from "../components/Header";
@@ -64,9 +58,6 @@ function Codegenerator() {
   const [iframeUrl, setIframeUrl] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [showEmbedCode, setShowEmbedCode] = useState(false);
-  const navigate = useNavigate();
-
-  // Generate iframe URL whenever settings change
   useEffect(() => {
     const productIds = selectedProducts.join(",");
     const url = `https://illustrationinnovators.com/illustration/?product=${productIds}&accentColor=${encodeURIComponent(
@@ -144,28 +135,13 @@ function Codegenerator() {
             <Header />
             <Box sx={{ mt: 10, mb: 4 }}>
               <Box sx={{ pt: 9 }}>
-                {/* <Typography
-                variant="h5"
-                gutterBottom
-                sx={{
-                  color: "#11233E",
-                  fontFamily: `'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`,
-                  fontStyle: "normal",
-                  fontSize: "24px",
-                  mb: 4,
-                }}
-              >
-                Customize Your Embed
-              </Typography> */}
 
                 <Grid container spacing={6} sx={{ mb: 5, display: "flex", justifyContent: "space-between" }}>
-                  {/* Left Side - Always Visible Product Selection */}
                   <Paper sx={{ p: 4, borderRadius: 2, flex: 1 }}>
                     <Typography sx={{ mb: 2, color: "#2c3e50", fontFamily: `'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`, fontWeight: 600, fontSize: "20px" }}>
                       Configuration
                     </Typography>
                     <Grid item xs={12} sx={{ display: "flex", flexDirection: "column" }}>
-                      {/* Select All Checkbox */}
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -177,9 +153,6 @@ function Codegenerator() {
                         label={`Select All (${selectedProducts.length}/${products.length} selected)`}
                         sx={{ mb: 2 }}
                       />
-
-                      {/* Always Visible Product List */}
-                      {/* Always Visible Product List (No Checkbox) */}
                       <Paper
                         variant="outlined"
                         sx={{
@@ -198,10 +171,10 @@ function Codegenerator() {
                                 sx={{
                                   borderBottom: "1px solid #f0f0f0",
                                   "&:last-child": { borderBottom: "none" },
-                                  py: 0.5,          // reduce vertical padding
-                                  px: 1,            // optional horizontal padding
+                                  py: 0.5,
+                                  px: 1,
                                   cursor: "pointer",
-                                  fontSize: "0.875rem", // smaller text
+                                  fontSize: "0.875rem",
                                   backgroundColor: selected ? "#102442" : "transparent",
                                   color: selected ? "white" : "inherit",
                                   "&:hover": {
@@ -221,45 +194,13 @@ function Codegenerator() {
                           })}
                         </List>
                       </Paper>
-
-
-
-                      {/* Selected Products Chips */}
-                      {/* <Typography variant="subtitle2" sx={{ mt: 2, mb: 1, fontWeight: "bold" }}>
-                      Selected Products:
-                    </Typography> */}
-                      {/* <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, minHeight: 60 }}>
-                      {selectedProducts.length > 0 ? (
-                        selectedProducts.map((id) => {
-                          const product = products.find((p) => p.id === id);
-                          return (
-                            <Chip
-                              key={id}
-                              label={product?.name}
-                              size="small"
-                              onDelete={() => handleProductToggle(id)}
-                              color="primary"
-                              variant="filled"
-                              sx={{ fontWeight: "medium", background: "#11233E", color: "white" }}
-                            />
-                          );
-                        })
-                      ) : (
-                        <Typography variant="body2" color="text.secondary" fontStyle="italic">
-                          No products selected
-                        </Typography>
-                      )}
-                    </Box> */}
                     </Grid>
                   </Paper>
-
-                  {/* Right Side - Colors + Current Settings */}
                   <Paper sx={{ p: 4, borderRadius: 2, flex: 1 }}>
                     <Typography sx={{ mb: 2, color: "#2c3e50", fontFamily: `'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`, fontWeight: 600, fontSize: "20px" }}>
                       Color Customization
                     </Typography>
                     <Grid item xs={12} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                      {/* Color Pickers */}
                       <Box
                         sx={{
                           display: "grid",
@@ -300,8 +241,6 @@ function Codegenerator() {
                           InputLabelProps={{ shrink: true }}
                         />
                       </Box>
-
-                      {/* Current Settings */}
                       <Paper
                         variant="outlined"
                         sx={{
@@ -316,8 +255,6 @@ function Codegenerator() {
                         <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
                           Current Settings
                         </Typography>
-
-                        {/* Products */}
                         <Typography variant="subtitle2" sx={{ fontWeight: "bold", mb: 1 }}>
                           Products Selected:
                         </Typography>
@@ -342,8 +279,6 @@ function Codegenerator() {
                             </Typography>
                           )}
                         </Box>
-
-                        {/* Colors */}
                         <Grid container spacing={2}>
                           <Grid item xs={6}>
                             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -374,21 +309,16 @@ function Codegenerator() {
                     </Grid>
                   </Paper>
                 </Grid>
-
-                {/* <Divider sx={{ my: 3 }} /> */}
-
-                {/* Generate Embed Code Button */}
-                {/* Generate Embed Code Button */}
                 <Box sx={{ display: "flex", justifyContent: "center", mb: 5 }}>
                   <Button
                     variant="contained"
                     size="large"
                     onClick={handleGenerateEmbedCode}
-                    disabled={selectedProducts.length === 0} // disable if no product selected
+                    disabled={selectedProducts.length === 0}
                     sx={{
                       background:
                         selectedProducts.length === 0
-                          ? "grey" // show grey when disabled
+                          ? "grey"
                           : "linear-gradient(320.1deg, #11233E 44.4%, #567BB0 97.6%)",
                       px: 4,
                       py: 1.5,
@@ -396,7 +326,7 @@ function Codegenerator() {
                       fontSize: "16px",
                       textTransform: "none",
                       "&.Mui-disabled": {
-                        background: "#ccc", // override MUI default disabled look
+                        background: "#ccc",
                         color: "#666",
                       },
                     }}
@@ -416,7 +346,7 @@ function Codegenerator() {
                       minHeight: "500px",
                     }}
                   >
-                    {/* Left Side - Embed Code (50% width) */}
+
                     <Box
                       sx={{
                         flex: "1 1 50%",
@@ -443,28 +373,27 @@ function Codegenerator() {
                         <Typography
                           variant="h6"
                           gutterBottom
-                         sx={{ mb: 2, color: "#2c3e50", fontFamily: `'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`, fontWeight: 600, fontSize: "20px" }}
+                          sx={{ mb: 2, color: "#2c3e50", fontFamily: `'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`, fontWeight: 600, fontSize: "20px" }}
                         >
                           Embed Code
                         </Typography>
-                        {/* Code Box */}
                         <Box
                           sx={{
                             p: 2,
-                            bgcolor: "#243241ff", // VS Code dark background
+                            bgcolor: "#243241ff",
                             border: "1px solid #2d2d2d",
                             borderRadius: 2,
                             overflowX: "hidden",
                             overflowY: "auto",
                             fontSize: "0.85rem",
-                            fontFamily: "'Fira Code', 'Consolas', 'Monaco', monospace", // monospaced font
+                            fontFamily: "'Fira Code', 'Consolas', 'Monaco', monospace",
                             lineHeight: 1.6,
-                            color: "#d4d4d4", // default VS Code text
+                            color: "#d4d4d4",
                             minHeight: "200px",
                             flex: 1,
                             wordWrap: "break-word",
                             whiteSpace: "pre-wrap",
-                            boxShadow: "inset 0 0 8px rgba(0,0,0,0.6)", // inner glow like editor
+                            boxShadow: "inset 0 0 8px rgba(0,0,0,0.6)",
                           }}
                         >
                           <Box sx={{ color: "#569cd6" }}>{`<iframe`}</Box>
@@ -493,8 +422,6 @@ function Codegenerator() {
                             <span style={{ color: "#ce9178" }}>"Illustration Widget"</span>
                           </Box>
                           <Box sx={{ color: "#569cd6" }}>{`></iframe>`}</Box>
-
-                          {/* Script tag */}
                           <Box sx={{ color: "#569cd6" }}>{`<script`}</Box>
                           <Box sx={{ pl: 2 }}>
                             <span style={{ color: "#9cdcfe" }}>src</span>=
@@ -504,9 +431,6 @@ function Codegenerator() {
                           </Box>
                           <Box sx={{ color: "#569cd6" }}>{`></script>`}</Box>
                         </Box>
-
-
-                        {/* Copy Button */}
                         <Button
                           variant="contained"
                           fullWidth
@@ -524,8 +448,6 @@ function Codegenerator() {
                         </Button>
                       </Paper>
                     </Box>
-
-                    {/* Right Side - Live Preview (50% width) */}
                     <Box
                       sx={{
                         flex: "1 1 50%",
@@ -535,7 +457,6 @@ function Codegenerator() {
                         minWidth: { md: "50%" },
                       }}
                     >
-
                       <Paper
                         variant="outlined"
                         sx={{
@@ -552,11 +473,10 @@ function Codegenerator() {
                           <Typography
                             variant="h6"
                             gutterBottom
-sx={{ mb: 2, color: "#2c3e50", fontFamily: `'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`, fontWeight: 600, fontSize: "20px" }}
+                            sx={{ mb: 2, color: "#2c3e50", fontFamily: `'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`, fontWeight: 600, fontSize: "20px" }}
                           >
                             Live Preview
                           </Typography>
-                          {/* Always show iframe if iframeUrl exists, regardless of selectedProducts */}
                           {iframeUrl ? (
                             <Box
                               sx={{
@@ -590,7 +510,6 @@ sx={{ mb: 2, color: "#2c3e50", fontFamily: `'Segoe UI', Tahoma, Geneva, Verdana,
                                   ? "Select at least one product to see preview"
                                   : "Loading preview..."}
                               </Typography>
-                              {/* Debug info - remove in production */}
                               <Typography
                                 variant="caption"
                                 color="text.disabled"
@@ -607,7 +526,6 @@ sx={{ mb: 2, color: "#2c3e50", fontFamily: `'Segoe UI', Tahoma, Geneva, Verdana,
                 )}
               </Box>
             </Box>
-
             <Snackbar
               open={snackbarOpen}
               autoHideDuration={3000}
@@ -618,16 +536,11 @@ sx={{ mb: 2, color: "#2c3e50", fontFamily: `'Segoe UI', Tahoma, Geneva, Verdana,
                 Embed code copied to clipboard!
               </Alert>
             </Snackbar>
-
           </Container>
-
         </Box>
-
       </ThemeProvider>
       <Footer />
-
     </>
   );
 }
-
 export default Codegenerator;
