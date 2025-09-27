@@ -1,1 +1,1 @@
-export const API_URL = "https://demos.godigitalalchemy.com/illustrata/embed/backend/";
+export const API_URL ="https://demos.godigitalalchemy.com/illustrata/embed/backend/";
