@@ -248,8 +248,10 @@
 }
 
 .tabs-paper {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
+  border-top-left-radius: 8px !important;
+  border-top-right-radius: 8px !important;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
   border-bottom: 1px solid #e0e0e0;
 }
 
@@ -272,8 +274,10 @@
 }
 
 .content-paper {
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+  border-bottom-left-radius: 8px !important;
+  border-bottom-right-radius: 8px !important;
   min-height: 450px;
 }
 
