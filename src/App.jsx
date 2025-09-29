@@ -3,6 +3,7 @@ import Login from './Authentication/Login'
 import Codegenerator from './Home/Codegenerator'
 import { createTheme, ThemeProvider } from '@mui/material'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import PrivateRoute from "./Authentication/PrivateRoute"
 
 const theme = createTheme({
   typography: {
@@ -14,10 +15,6 @@ const theme = createTheme({
   }
 })
 function App() {
-  const PrivateRoute = ({ element }) => {
-    const token = localStorage.getItem('token');
-    return token ? element : <Navigate to="/login" replace />;
-  };
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter basename="/illustrata/embedsolution/">

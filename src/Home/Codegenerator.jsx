@@ -309,7 +309,7 @@ function Codegenerator() {
                     </Grid>
                   </Paper>
                 </Grid>
-                <Box sx={{ display: "flex", justifyContent: "center", mb: 5 }}>
+                <Box className="embed-parent-container">
                   <Button
                     variant="contained"
                     size="large"

@@ -227,6 +227,11 @@
   border-radius: 50%;
   border: 2px solid white;
 }
+.embed-parent-container{
+    margin-bottom: 40px;
+  display: flex;
+  justify-content: center;
+}
 .generate-btn {
   padding: 12px 32px;
   font-weight: 600;
