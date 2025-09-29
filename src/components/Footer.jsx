@@ -9,8 +9,11 @@ function Footer() {
       sx={{
         width: "100%",
         background: "linear-gradient(90deg, #1a3c6c 0%, #3a6db3 100%)",
-        py: { xs: 2, sm: 3, md: 4 },
+        height:"130px",
         textAlign: "center",
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center",
         borderTop: "1.5px solid #e3eafc",
         boxShadow: "0 -2px 12px 0 rgba(31, 38, 135, 0.07)",
         mt: "auto", 
