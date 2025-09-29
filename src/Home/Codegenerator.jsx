@@ -445,179 +445,81 @@ function Codegenerator() {
                     size="large"
                     onClick={handleGenerateEmbedCode}
                     disabled={selectedProducts.length === 0}
-                    sx={{
-                      background:
-                        selectedProducts.length === 0
-                          ? "grey"
-                          : "linear-gradient(320.1deg, #11233E 44.4%, #567BB0 97.6%)",
-                      px: 4,
-                      py: 1.5,
-                      fontWeight: "600",
-                      fontSize: "16px",
-                      textTransform: "none",
-                      "&.Mui-disabled": {
-                        background: "#ccc",
-                        color: "#666",
-                      },
-                    }}
+                    className="generate-btn"
                   >
                     Generate Embed Code
                   </Button>
                 </Box>
                 {showEmbedCode && (
-                  <Box
-                    sx={{
-                      mt: 2,
-                      width: "100%",
-                      minHeight: "500px",
-                    }}
-                  >
-                    <Paper
-                      variant="outlined"
-                      sx={{
-                        borderBottomLeftRadius: 0,
-                        borderBottomRightRadius: 0,
-                        borderBottom: "none",
-                      }}
-                    >
+                  <Box className="embed-container">
+                    <Paper className="tabs-paper">
                       <Tabs
                         value={activeTab}
                         onChange={(event, newValue) => setActiveTab(newValue)}
                         variant="fullWidth"
-                        sx={{
-                          minHeight: "48px",
-                          "& .MuiTab-root": {
-                            minHeight: "48px",
-                            textTransform: "none",
-                            fontWeight: 600,
-                            fontSize: "0.9rem",
-                          },
-                          
-                        }}
+                        className="embed-tabs"
                       >
                         <Tab
                           label="Embed Code"
                           value="code"
-                          sx={{
-                            color: "text.secondary", 
-                            "&.Mui-selected": {
-                              color: "#11233E",
-                            },
-                          }}
+                          className="embed-tab"
                         />
                         <Tab
                           label="Live Preview"
                           value="preview"
-                          sx={{
-                            color: "text.secondary", 
-                            "&.Mui-selected": {
-                              color: "#11233E",
-                            },
-                          }}
+                          className="embed-tab"
                         />
                       </Tabs>
                     </Paper>
-
-                    {/* Tab Content */}
-                    <Paper
-                      variant="outlined"
-                      sx={{
-                        borderTopLeftRadius: 0,
-                        borderTopRightRadius: 0,
-                        minHeight: "450px",
-                      }}
-                    >
-                      {/* Embed Code Tab */}
+                    <Paper className="content-paper">
                       {activeTab === "code" && (
-                        <Box
-                          sx={{
-                            p: 2,
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: 2,
-                            height: "100%",
-                            minHeight: "450px",
-                          }}
-                        >
-
-                          {/* Code Box */}
-                          <Box
-                            sx={{
-                              p: 2,
-                              bgcolor: "#243241ff",
-                              border: "1px solid #2d2d2d",
-                              borderRadius: 2,
-                              overflowX: "auto",
-                              overflowY: "auto",
-                              fontSize: "0.85rem",
-                              fontFamily:
-                                "'Fira Code', 'Consolas', 'Monaco', monospace",
-                              lineHeight: 1.6,
-                              color: "#d4d4d4",
-                              minHeight: "300px",
-                              flex: 1,
-                              wordWrap: "break-word",
-                              whiteSpace: "pre-wrap",
-                              boxShadow: "inset 0 0 8px rgba(0,0,0,0.6)",
-                            }}
-                          >
-                            <Box sx={{ color: "#569cd6" }}>{`<iframe`}</Box>
-                            <Box sx={{ pl: 2 }}>
-                              <span style={{ color: "#9cdcfe" }}>id</span>=
-                              <span style={{ color: "#ce9178" }}>
+                        <Box className="code-tab-content">
+                          <Box className="code-box">
+                            <Box className="code-line">{`<iframe`}</Box>
+                            <Box className="code-indent">
+                              <span className="code-attribute">id</span>=
+                              <span className="code-value">
                                 "crossDomainIframe"
                               </span>
                             </Box>
-                            <Box sx={{ pl: 2 }}>
-                              <span style={{ color: "#9cdcfe" }}>src</span>=
-                              <span style={{ color: "#ce9178" }}>
-                                "{iframeUrl}"
-                              </span>
+                            <Box className="code-indent">
+                              <span className="code-attribute">src</span>=
+                              <span className="code-value">"{iframeUrl}"</span>
                             </Box>
-                            <Box sx={{ pl: 2 }}>
-                              <span style={{ color: "#9cdcfe" }}>width</span>=
-                              <span style={{ color: "#ce9178" }}>"100%"</span>
+                            <Box className="code-indent">
+                              <span className="code-attribute">width</span>=
+                              <span className="code-value">"100%"</span>
                             </Box>
-                            <Box sx={{ pl: 2 }}>
-                              <span style={{ color: "#9cdcfe" }}>height</span>=
-                              <span style={{ color: "#ce9178" }}>"600"</span>
+                            <Box className="code-indent">
+                              <span className="code-attribute">height</span>=
+                              <span className="code-value">"600"</span>
                             </Box>
-                            <Box sx={{ pl: 2 }}>
-                              <span style={{ color: "#9cdcfe" }}>
+                            <Box className="code-indent">
+                              <span className="code-attribute">
                                 frameborder
                               </span>
-                              =<span style={{ color: "#ce9178" }}>"0"</span>
+                              =<span className="code-value">"0"</span>
                             </Box>
-                            <Box sx={{ pl: 2 }}>
-                              <span style={{ color: "#9cdcfe" }}>title</span>=
-                              <span style={{ color: "#ce9178" }}>
+                            <Box className="code-indent">
+                              <span className="code-attribute">title</span>=
+                              <span className="code-value">
                                 "Illustration Widget"
                               </span>
                             </Box>
-                            <Box sx={{ color: "#569cd6" }}>{`></iframe>`}</Box>
-
-                            {/* Script tag */}
-                            <Box sx={{ color: "#569cd6" }}>{`<script`}</Box>
-                            <Box sx={{ pl: 2 }}>
-                              <span style={{ color: "#9cdcfe" }}>src</span>=
-                              <span style={{ color: "#ce9178" }}>
+                            <Box className="code-line">{`></iframe>`}</Box>
+                            <Box className="code-line">{`<script`}</Box>
+                            <Box className="code-indent">
+                              <span className="code-attribute">src</span>=
+                              <span className="code-value">
                                 "https://demos.godigitalalchemy.com/illustrata/embed/autoheight.js"
                               </span>
                             </Box>
-                            <Box sx={{ color: "#569cd6" }}>{`></script>`}</Box>
+                            <Box className="code-line">{`></script>`}</Box>
                           </Box>
-
-                          {/* Copy Button */}
                           <Button
                             variant="contained"
                             fullWidth
-                            sx={{
-                              background:
-                                "linear-gradient(320.1deg, #11233E 44.4%, #567BB0 97.6%)",
-                              py: 1.5,
-                              fontWeight: "600",
-                              textTransform: "none",
-                            }}
+                            className="generate-btn"
                             startIcon={<ContentCopy />}
                             onClick={copyToClipboard}
                           >
@@ -625,39 +527,11 @@ function Codegenerator() {
                           </Button>
                         </Box>
                       )}
-
-                      {/* Live Preview Tab */}
                       {activeTab === "preview" && (
-                        <Box
-                          sx={{
-                            p: 2,
-                            display: "flex",
-                            flexDirection: "column",
-                            height: "100%",
-                            minHeight: "450px",
-                          }}
-                        >
-                          {/* Preview Content */}
-                          <Box
-                            sx={{
-                              flex: 1,
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              minHeight: "380px",
-                            }}
-                          >
+                        <Box className="preview-tab-content">
+                          <Box className="preview-container">
                             {iframeUrl ? (
-                              <Box
-                                sx={{
-                                  width: "100%",
-                                  height: 380,
-                                  border: "1px solid",
-                                  borderColor: "divider",
-                                  borderRadius: 2,
-                                  overflow: "hidden",
-                                }}
-                              >
+                              <Box className="preview-iframe-wrapper">
                                 <iframe
                                   id="crossDomainIframe"
                                   src={iframeUrl}
@@ -665,11 +539,11 @@ function Codegenerator() {
                                   height="100%"
                                   frameBorder="0"
                                   title="Embed Preview"
-                                  style={{ borderRadius: 4 }}
+                                  className="preview-iframe"
                                 />
                               </Box>
                             ) : (
-                              <Box sx={{ textAlign: "center", p: 3 }}>
+                              <Box className="preview-placeholder">
                                 <Typography
                                   variant="body2"
                                   color="text.secondary"
