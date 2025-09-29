@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  Box,
-  Snackbar,
-  Alert,
-} from "@mui/material";
+import { AppBar, Toolbar, Button, Box, Snackbar, Alert } from "@mui/material";
 import illustrataLogo from "../assets/Link.svg";
 import { useNavigate } from "react-router-dom";
 
@@ -36,11 +28,7 @@ const Header = () => {
 
   return (
     <>
-      <AppBar
-        position="absolute"
-        elevation={1}
-        className="custom-header"
-      >
+      <AppBar position="absolute" elevation={1} className="custom-header">
         <Toolbar className="header-toolbar">
           <Box
             component="img"
@@ -51,7 +39,9 @@ const Header = () => {
           <Button
             variant="contained"
             disabled={logoutInProgress}
-            className={`logout-button ${logoutInProgress ? 'logout-button-disabled' : ''}`}
+            className={`logout-button ${
+              logoutInProgress ? "logout-button-disabled" : ""
+            }`}
             onClick={handleLogout}
           >
             {logoutInProgress ? "Logging Out..." : "Log Out"}

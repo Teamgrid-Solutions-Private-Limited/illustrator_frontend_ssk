@@ -1,9 +1,9 @@
-import './App.css'
-import Login from './Authentication/Login'
-import Codegenerator from './Home/Codegenerator'
-import { createTheme, ThemeProvider } from '@mui/material'
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import PrivateRoute from "./Authentication/PrivateRoute"
+import "./App.css";
+import Login from "./Authentication/Login";
+import Codegenerator from "./Home/Codegenerator";
+import { createTheme, ThemeProvider } from "@mui/material";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import PrivateRoute from "./Authentication/PrivateRoute";
 
 const theme = createTheme({
   typography: {
@@ -12,19 +12,22 @@ const theme = createTheme({
     fontWeightMedium: 500,
     fontWeightSemiBold: 600,
     fontWeightBold: 700,
-  }
-})
+  },
+});
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter basename="/illustrata/embedsolution/">
         <Routes>
-          <Route path="/" element={<PrivateRoute element={<Codegenerator />} />} />
+          <Route
+            path="/"
+            element={<PrivateRoute element={<Codegenerator />} />}
+          />
           <Route path="/login" element={<Login />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
-  )
+  );
 }
 
 export default App;

@@ -236,7 +236,7 @@
   padding: 12px 32px;
   font-weight: 600;
   font-size: 16px;
-  text-transform: none !important; /* force override */
+  text-transform: none !important;
   background: linear-gradient(320.1deg, #11233E 44.4%, #567BB0 97.6%);
 }
 
@@ -357,10 +357,8 @@
   height: 420px;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 0 0 1px rgba(0,0,0,0.1); /* subtle outline */
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.1);
 }
-
-
 
 .preview-iframe {
   border-radius: 4px;
@@ -370,7 +368,6 @@
   text-align: center;
   padding: 24px;
 }
-/* Header Styles */
 .custom-header {
   background: white !important;
   color: #0d1b3d !important;
@@ -416,7 +413,6 @@
 .snackbar-alert {
   width: 100% !important;
 }
-/* Footer Styles */
 .custom-footer {
   width: 100% !important;
   background: linear-gradient(90deg, #1a3c6c 0%, #3a6db3 100%) !important;

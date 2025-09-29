@@ -126,20 +126,12 @@ function Codegenerator() {
             <Header />
             <Box className="codegen-mainbox">
               <Box sx={{ pt: 9 }}>
-                <Grid
-                  container
-                  spacing={6}
-                  className="mainGrid"
-                >
+                <Grid container spacing={6} className="mainGrid">
                   <Paper className="config-custom-paper">
                     <Typography className="config-custom-typo">
                       Configuration
                     </Typography>
-                    <Grid
-                      item
-                      xs={12}
-                     className="secondary-grid"
-                    >
+                    <Grid item xs={12} className="secondary-grid">
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -156,10 +148,7 @@ function Codegenerator() {
                         label={`Select All (${selectedProducts.length}/${products.length} selected)`}
                         sx={{ mb: 2 }}
                       />
-                      <Paper
-                        variant="outlined"
-                        className="products-paper"
-                      >
+                      <Paper variant="outlined" className="products-paper">
                         <List dense className="product-list">
                           {products.map((product) => {
                             const selected = selectedProducts.includes(
@@ -168,7 +157,9 @@ function Codegenerator() {
                             return (
                               <ListItem
                                 key={product.id}
-                                className={`product-list-item ${selected ? "selected" : ""}`}
+                                className={`product-list-item ${
+                                  selected ? "selected" : ""
+                                }`}
                                 onClick={() => handleProductToggle(product.id)}
                               >
                                 <ListItemText
@@ -191,11 +182,7 @@ function Codegenerator() {
                     <Typography className="config-custom-typo">
                       Color Customization
                     </Typography>
-                    <Grid
-                      item
-                      xs={12}
-                      className="color-customization-grid"
-                    >
+                    <Grid item xs={12} className="color-customization-grid">
                       <Box className="color-customization-inputs">
                         <TextField
                           fullWidth
@@ -274,7 +261,10 @@ function Codegenerator() {
                         <Grid container spacing={2}>
                           <Grid item xs={6}>
                             <Box className="color-preview">
-                              <Box className="color-circle" style={{ backgroundColor: accentColor }} />
+                              <Box
+                                className="color-circle"
+                                style={{ backgroundColor: accentColor }}
+                              />
                               <Typography variant="subtitle2">
                                 Accent: {accentColor}
                               </Typography>
@@ -282,7 +272,10 @@ function Codegenerator() {
                           </Grid>
                           <Grid item xs={6}>
                             <Box className="color-preview">
-                              <Box className="color-circle" style={{ backgroundColor: buttonColor }} />
+                              <Box
+                                className="color-circle"
+                                style={{ backgroundColor: buttonColor }}
+                              />
                               <Typography variant="subtitle2">
                                 Button: {buttonColor}
                               </Typography>
@@ -290,7 +283,10 @@ function Codegenerator() {
                           </Grid>
                           <Grid item xs={6}>
                             <Box className="color-preview">
-                              <Box className="color-circle" style={{ backgroundColor: hoverColor }}/>
+                              <Box
+                                className="color-circle"
+                                style={{ backgroundColor: hoverColor }}
+                              />
                               <Typography variant="subtitle2">
                                 Hover: {hoverColor}
                               </Typography>
@@ -298,7 +294,10 @@ function Codegenerator() {
                           </Grid>
                           <Grid item xs={6}>
                             <Box className="color-preview">
-                              <Box className="color-circle" style={{ backgroundColor: baseColor }}/>
+                              <Box
+                                className="color-circle"
+                                style={{ backgroundColor: baseColor }}
+                              />
                               <Typography variant="subtitle2">
                                 Base: {baseColor}
                               </Typography>
