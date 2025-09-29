@@ -1,16 +1,67 @@
-# React + Vite
+#  Illustrata Embed Solution
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A **React + Vite** frontend for the *Illustrata Embed Solution*, providing secure authentication and an interactive code generator to embed product illustrations with customizable colors.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+##  Features
+-  **Secure Login** – JWT-based authentication  
+-  **Code Generator** – Generate iframe embed code for products  
+-  **Customizable Colors** – Adjust illustration colors before embedding  
+-  **Live Preview** – See changes instantly  
+-  **Protected Routes** – Only authenticated users can access the generator  
+-  **Responsive UI** – Built with Material-UI + custom styles  
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+##  Tech Stack
+- **React + Vite**  
+- **Material-UI (MUI)**  
+- **JWT Authentication**  
+- **Custom CSS**  
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+###  Installation
+```bash
+git clone https://github.com/yourusername/illustrator_frontend_ssk.git
+cd illustrator_frontend_ssk
+npm install
+```
+### Development
+```bash
+npm run dev
+```
+###  Build for Production
+```bash
+npm run build
+```
+###  Preview Build
+```bash
+npm run preview
+```
+###  Project Structure
+```
+src/
+├── Authentication/ # Login & route protection
+├── Home/Codegenerator.jsx # Code generator + preview page
+├── components/ # Header, Footer
+├── assets/ # Logos & static assets
+├── Api/Api.js # API configuration
+├── App.jsx # Main app + routing
+└── App.css # Custom styles
+```
+
+###  Configuration
+- **API URL** → `src/Api/Api.js`
+- **Base Path** → `vite.config.js` & `package.json` (for deployment under `/illustrata/embedsolution/`)
+
+##  Contributing
+1. Fork the repo
+2. Create your feature branch (`git checkout -b feature/my-feature`)
+3. Commit your changes (`git commit -m "Add my feature"`)
+4. Push to the branch (`git push origin feature/my-feature`)
+5. Open a Pull Request
+
+
+
