@@ -7,16 +7,16 @@ export default defineConfig({
   base: '/illustrata/embedsolution/',
 
   server: {
-    host: 'localhost',
+    host: 'localhost', 
     port: 3001,
     fs: {
-      allow: ['..'] 
+      allow: ['..']
     }
   },
 
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src'), 
+      '@': path.resolve(__dirname, 'src'),
     },
   },
 })
