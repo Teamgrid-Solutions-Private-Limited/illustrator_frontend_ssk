@@ -18,7 +18,6 @@ import {
   Tabs,
   Tab,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import { ContentCopy } from "@mui/icons-material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Header from "../components/Header";
@@ -56,7 +55,6 @@ function Codegenerator() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [showEmbedCode, setShowEmbedCode] = useState(false);
   const [activeTab, setActiveTab] = useState("code");
-  const navigate = useNavigate();
 
   useEffect(() => {
     const productIds = selectedProducts.join(",");
@@ -436,7 +434,6 @@ function Codegenerator() {
                 )}
               </Box>
             </Box>
-
             <Snackbar
               open={snackbarOpen}
               autoHideDuration={3000}
@@ -458,5 +455,4 @@ function Codegenerator() {
     </>
   );
 }
-
 export default Codegenerator;

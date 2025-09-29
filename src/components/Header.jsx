@@ -39,41 +39,19 @@ const Header = () => {
       <AppBar
         position="absolute"
         elevation={1}
-        sx={{
-          background: "white",
-          color: "#0d1b3d",
-          borderRadius: "20px",
-          px: 4,
-          py: 2,
-          mt: 2,
-          top: 25,
-          left: 0,
-          right: 0,
-          margin: "0 auto",
-          maxWidth: "1160px",
-        }}
+        className="custom-header"
       >
-        <Toolbar sx={{ justifyContent: "space-between" }}>
+        <Toolbar className="header-toolbar">
           <Box
             component="img"
             src={illustrataLogo}
             alt="Illustrata Logo"
-            sx={{ height: 30 }}
+            className="header-logo"
           />
           <Button
             variant="contained"
             disabled={logoutInProgress}
-            sx={{
-              backgroundColor: logoutInProgress ? "#cccccc" : "#016cd6",
-              borderRadius: "10px",
-              px: 3,
-              fontWeight: 400,
-              fontSize: "14px",
-              textTransform: "none",
-              "&:hover": {
-                backgroundColor: logoutInProgress ? "#cccccc" : "#23455c",
-              },
-            }}
+            className={`logout-button ${logoutInProgress ? 'logout-button-disabled' : ''}`}
             onClick={handleLogout}
           >
             {logoutInProgress ? "Logging Out..." : "Log Out"}
@@ -89,7 +67,7 @@ const Header = () => {
         <Alert
           onClose={handleSnackbarClose}
           severity="info"
-          sx={{ width: "100%" }}
+          className="snackbar-alert"
         >
           Logging out...
         </Alert>

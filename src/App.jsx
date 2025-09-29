@@ -13,14 +13,11 @@ const theme = createTheme({
     fontWeightBold: 700,
   }
 })
-
 function App() {
-
   const PrivateRoute = ({ element }) => {
     const token = localStorage.getItem('token');
     return token ? element : <Navigate to="/login" replace />;
   };
-
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter basename="/illustrata/embedsolution/">
