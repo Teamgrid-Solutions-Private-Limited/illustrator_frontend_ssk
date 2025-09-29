@@ -90,7 +90,143 @@
   align-items: center;
   box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.2);
 }
+.codegenBox{
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #ffffff, #cce0ff);
+  padding-top: 32px;
+  padding-bottom: 32px;
+}
+.codegenCon{
+  height: 100%;
+}
+.codegen-mainbox{
+  margin-top: 80px;
+  margin-bottom: 32px;
+}
+.mainGrid{
+  margin-bottom: 40px;
+  display: flex;
+  justify-content: space-between;
+}
+.config-custom-paper{
+  padding: 32px;
+  border-radius: 8px !important;
+  flex: 1;
+}
+.config-custom-typo{
+  margin-bottom: 16px !important;
+  color: #2c3e50;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif ;
+  font-weight: 600 !important;
+  font-size: 20px !important;
+}
+.secondary-grid{
+  display: flex;
+  flex-direction: column;
+}
+.products-paper {
+  max-height: 300px;
+  overflow: auto;
+  padding: 8px; 
+  border: 1px solid #ddd;
+}
 
+.product-list {
+  width: 100%;
+}
+
+.product-list-item {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 4px 8px; 
+  cursor: pointer;
+  font-size: 0.875rem;
+  background-color: transparent;
+  color: inherit;
+  transition: background-color 0.2s ease;
+}
+
+.product-list-item:last-child {
+  border-bottom: none;
+}
+
+.product-list-item:hover {
+  background-color: #f5f5f5;
+}
+
+.product-list-item.selected {
+  background-color: #102442;
+  color: white;
+}
+
+.product-list-item.selected:hover {
+  background-color: #102442; 
+}
+
+
+.color-customization-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+
+.color-customization-inputs {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 600px) {
+  .color-customization-inputs {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.color-settings-panel {
+  padding: 20px;  
+  background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+  border: 1px solid var(--mui-palette-primary-light, #90caf9); 
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+}
+
+
+.color-settings-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+
+.color-settings-subtitle {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.selected-products {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.custom-chip {
+  font-weight: 500;
+  background: #11233E !important;
+  color: white !important;
+}
+
+.color-preview {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.color-circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid white;
+}
 
 
 @media (max-width:768px){

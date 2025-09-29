@@ -51,7 +51,7 @@ function Codegenerator() {
   const [accentColor, setAccentColor] = useState("#131e27");
   const [buttonColor, setButtonColor] = useState("#ffc000");
   const [hoverColor, setHoverColor] = useState("#f8f9fa");
-  const [baseColor, setBaseColor] = useState("#EBF3F9");
+  const [baseColor, setBaseColor] = useState("#ebf3f9");
   const [iframeUrl, setIframeUrl] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [showEmbedCode, setShowEmbedCode] = useState(false);
@@ -123,42 +123,24 @@ function Codegenerator() {
   return (
     <>
       <ThemeProvider theme={theme}>
-        <Box
-          sx={{
-            minHeight: "100vh",
-            background: "linear-gradient(to bottom right, #ffffff, #cce0ff)",
-            py: 4,
-          }}
-        >
-          <Container maxWidth="lg" sx={{ height: "100%" }}>
+        <Box className="codegenBox">
+          <Container maxWidth="lg" className="codegenCon">
             <Header />
-            <Box sx={{ mt: 10, mb: 4 }}>
+            <Box className="codegen-mainbox">
               <Box sx={{ pt: 9 }}>
                 <Grid
                   container
                   spacing={6}
-                  sx={{
-                    mb: 5,
-                    display: "flex",
-                    justifyContent: "space-between",
-                  }}
+                  className="mainGrid"
                 >
-                  <Paper sx={{ p: 4, borderRadius: 2, flex: 1 }}>
-                    <Typography
-                      sx={{
-                        mb: 2,
-                        color: "#2c3e50",
-                        fontFamily: `'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`,
-                        fontWeight: 600,
-                        fontSize: "20px",
-                      }}
-                    >
+                  <Paper className="config-custom-paper">
+                    <Typography className="config-custom-typo">
                       Configuration
                     </Typography>
                     <Grid
                       item
                       xs={12}
-                      sx={{ display: "flex", flexDirection: "column" }}
+                     className="secondary-grid"
                     >
                       <FormControlLabel
                         control={
@@ -178,14 +160,9 @@ function Codegenerator() {
                       />
                       <Paper
                         variant="outlined"
-                        sx={{
-                          maxHeight: 300,
-                          overflow: "auto",
-                          p: 1,
-                          border: "1px solid #ddd",
-                        }}
+                        className="products-paper"
                       >
-                        <List dense sx={{ width: "100%" }}>
+                        <List dense className="product-list">
                           {products.map((product) => {
                             const selected = selectedProducts.includes(
                               product.id
@@ -193,23 +170,7 @@ function Codegenerator() {
                             return (
                               <ListItem
                                 key={product.id}
-                                sx={{
-                                  borderBottom: "1px solid #f0f0f0",
-                                  "&:last-child": { borderBottom: "none" },
-                                  py: 0.5,
-                                  px: 1,
-                                  cursor: "pointer",
-                                  fontSize: "0.875rem",
-                                  backgroundColor: selected
-                                    ? "#102442"
-                                    : "transparent",
-                                  color: selected ? "white" : "inherit",
-                                  "&:hover": {
-                                    backgroundColor: selected
-                                      ? "#102442"
-                                      : "#f5f5f5",
-                                  },
-                                }}
+                                className={`product-list-item ${selected ? "selected" : ""}`}
                                 onClick={() => handleProductToggle(product.id)}
                               >
                                 <ListItemText
@@ -228,30 +189,16 @@ function Codegenerator() {
                       </Paper>
                     </Grid>
                   </Paper>
-                  <Paper sx={{ p: 4, borderRadius: 2, flex: 1 }}>
-                    <Typography
-                      sx={{
-                        mb: 2,
-                        color: "#2c3e50",
-                        fontFamily: `'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`,
-                        fontWeight: 600,
-                        fontSize: "20px",
-                      }}
-                    >
+                  <Paper className="config-custom-paper">
+                    <Typography className="config-custom-typo">
                       Color Customization
                     </Typography>
                     <Grid
                       item
                       xs={12}
-                      sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+                      className="color-customization-grid"
                     >
-                      <Box
-                        sx={{
-                          display: "grid",
-                          gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
-                          gap: 2,
-                        }}
-                      >
+                      <Box className="color-customization-inputs">
                         <TextField
                           fullWidth
                           label="Accent Color"
@@ -287,36 +234,21 @@ function Codegenerator() {
                       </Box>
                       <Paper
                         variant="outlined"
-                        sx={{
-                          p: 2.5,
-                          background:
-                            "linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%)",
-                          border: "1px solid",
-                          borderColor: "primary.light",
-                          borderRadius: 2,
-                          boxShadow: "0 2px 8px rgba(25, 118, 210, 0.08)",
-                        }}
+                        className="color-settings-panel"
                       >
                         <Typography
                           variant="h6"
-                          sx={{ fontWeight: 600, mb: 1 }}
+                          className="color-settings-title"
                         >
                           Current Settings
                         </Typography>
                         <Typography
                           variant="subtitle2"
-                          sx={{ fontWeight: "bold", mb: 1 }}
+                          className="color-settings-subtitle"
                         >
                           Products Selected:
                         </Typography>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            flexWrap: "wrap",
-                            gap: 1,
-                            mb: 2,
-                          }}
-                        >
+                        <Box className="selected-products">
                           {selectedProducts.length > 0 ? (
                             selectedProducts.map((id) => {
                               const product = products.find((p) => p.id === id);
@@ -327,11 +259,7 @@ function Codegenerator() {
                                   size="small"
                                   color="primary"
                                   variant="filled"
-                                  sx={{
-                                    fontWeight: "medium",
-                                    background: "#11233E",
-                                    color: "white",
-                                  }}
+                                  className="custom-chip"
                                 />
                               );
                             })
@@ -347,88 +275,32 @@ function Codegenerator() {
                         </Box>
                         <Grid container spacing={2}>
                           <Grid item xs={6}>
-                            <Box
-                              sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 1,
-                              }}
-                            >
-                              <Box
-                                sx={{
-                                  width: 20,
-                                  height: 20,
-                                  borderRadius: "50%",
-                                  bgcolor: accentColor,
-                                  border: "2px solid white",
-                                }}
-                              />
+                            <Box className="color-preview">
+                              <Box className="color-circle" style={{ backgroundColor: accentColor }} />
                               <Typography variant="subtitle2">
                                 Accent: {accentColor}
                               </Typography>
                             </Box>
                           </Grid>
                           <Grid item xs={6}>
-                            <Box
-                              sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 1,
-                              }}
-                            >
-                              <Box
-                                sx={{
-                                  width: 20,
-                                  height: 20,
-                                  borderRadius: "50%",
-                                  bgcolor: buttonColor,
-                                  border: "2px solid white",
-                                }}
-                              />
+                            <Box className="color-preview">
+                              <Box className="color-circle" style={{ backgroundColor: buttonColor }} />
                               <Typography variant="subtitle2">
                                 Button: {buttonColor}
                               </Typography>
                             </Box>
                           </Grid>
                           <Grid item xs={6}>
-                            <Box
-                              sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 1,
-                              }}
-                            >
-                              <Box
-                                sx={{
-                                  width: 20,
-                                  height: 20,
-                                  borderRadius: "50%",
-                                  bgcolor: hoverColor,
-                                  border: "2px solid white",
-                                }}
-                              />
+                            <Box className="color-preview">
+                              <Box className="color-circle" style={{ backgroundColor: hoverColor }}/>
                               <Typography variant="subtitle2">
                                 Hover: {hoverColor}
                               </Typography>
                             </Box>
                           </Grid>
                           <Grid item xs={6}>
-                            <Box
-                              sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 1,
-                              }}
-                            >
-                              <Box
-                                sx={{
-                                  width: 20,
-                                  height: 20,
-                                  borderRadius: "50%",
-                                  bgcolor: baseColor,
-                                  border: "2px solid white",
-                                }}
-                              />
+                            <Box className="color-preview">
+                              <Box className="color-circle" style={{ backgroundColor: baseColor }}/>
                               <Typography variant="subtitle2">
                                 Base: {baseColor}
                               </Typography>
