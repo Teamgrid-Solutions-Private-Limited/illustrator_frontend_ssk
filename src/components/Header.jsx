@@ -41,6 +41,7 @@ const Header = () => {
             disabled={logoutInProgress}
             className={`logout-button ${
               logoutInProgress ? "logout-button-disabled" : ""
+              
             }`}
             onClick={handleLogout}
           >
@@ -49,6 +50,7 @@ const Header = () => {
         </Toolbar>
       </AppBar>
       <Snackbar
+      className="customSnackbar"
         open={snackbarOpen}
         autoHideDuration={2000}
         onClose={handleSnackbarClose}
@@ -57,7 +59,7 @@ const Header = () => {
         <Alert
           onClose={handleSnackbarClose}
           severity="info"
-          className="snackbar-alert"
+          className="customAlert"
         >
           Logging out...
         </Alert>
