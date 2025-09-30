@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Container,
@@ -21,7 +21,7 @@ import {
 import { ContentCopy } from "@mui/icons-material";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-
+import { EMBED_BASE_URL } from "../Constant";
 const products = [
   { id: 1103, name: "Demo, A Multi-Year Guaranteed Annuity" },
   { id: 1041, name: "Demo, A Fixed Indexed Annuity" },
@@ -39,18 +39,6 @@ function Codegenerator() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [showEmbedCode, setShowEmbedCode] = useState(false);
   const [activeTab, setActiveTab] = useState("code");
-
-  useEffect(() => {
-    const productIds = selectedProducts.join(",");
-    const url = `https://illustrationinnovators.com/illustration/?product=${productIds}&accentColor=${encodeURIComponent(
-      accentColor
-    )}&buttonColor=${encodeURIComponent(
-      buttonColor
-    )}&hoverColor=${encodeURIComponent(
-      hoverColor
-    )}&baseColor=${encodeURIComponent(baseColor)}`;
-    setIframeUrl(url);
-  }, [selectedProducts, accentColor, buttonColor, hoverColor, baseColor]);
 
   const handleProductToggle = (productId) => {
     setSelectedProducts((prev) =>
@@ -91,7 +79,7 @@ function Codegenerator() {
 
   const handleGenerateEmbedCode = () => {
     const productIds = selectedProducts.join(",");
-    const url = `https://demos.godigitalalchemy.com/illustrata/embed/illustration/?product=${productIds}&accentColor=${encodeURIComponent(
+    const url = `${EMBED_BASE_URL}/illustration/?product=${productIds}&accentColor=${encodeURIComponent(
       accentColor
     )}&buttonColor=${encodeURIComponent(
       buttonColor
@@ -138,9 +126,8 @@ function Codegenerator() {
                           return (
                             <ListItem
                               key={product.id}
-                              className={`product-list-item ${
-                                selected ? "selected" : ""
-                              }`}
+                              className={`product-list-item ${selected ? "selected" : ""
+                                }`}
                               onClick={() => handleProductToggle(product.id)}
                             >
                               <ListItemText
@@ -353,7 +340,7 @@ function Codegenerator() {
                           <Box className="code-indent">
                             <span className="code-attribute">src</span>=
                             <span className="code-value">
-                              "https://demos.godigitalalchemy.com/illustrata/embed/autoheight.js"
+                              "{EMBED_BASE_URL}/autoheight.js"
                             </span>
                           </Box>
                           <Box className="code-line">{`></script>`}</Box>
@@ -392,7 +379,7 @@ function Codegenerator() {
                                 gutterBottom
                               >
                                 {selectedProducts &&
-                                selectedProducts.length === 0
+                                  selectedProducts.length === 0
                                   ? "Select at least one product to see preview"
                                   : "Loading preview..."}
                               </Typography>
@@ -407,7 +394,7 @@ function Codegenerator() {
             </Box>
           </Box>
           <Snackbar
-          className="customSnackbar"
+            className="customSnackbar"
             open={snackbarOpen}
             autoHideDuration={3000}
             onClose={handleSnackbarClose}

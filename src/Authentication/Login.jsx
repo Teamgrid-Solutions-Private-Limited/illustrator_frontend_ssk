@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Visibility, VisibilityOff, Email, Lock } from "@mui/icons-material";
-import { API_URL } from "../Api/Api";
+import { BASE_API_URL } from "../Constant";
 import axios from "axios";
 import logoHeader from "../assets/LogoHeader.svg";
 import Footer from "../components/Footer";
@@ -29,8 +29,8 @@ const LoginPage = () => {
   });
   const navigate = useNavigate();
 
-  const validateEmail = (email) =>
-    /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
+ const validateEmail = (email) =>
+  /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
 
   const validate = () => {
     const newErrors = {};
@@ -64,7 +64,7 @@ const LoginPage = () => {
     if (!validate()) return;
     setLoading(true);
     try {
-      const response = await axios.post(`${API_URL}/api/auth/login`, form);
+      const response = await axios.post(`${BASE_API_URL}/api/auth/login`, form);
       if (response.status === 200 && response.data.token) {
         setSnackbar({
           open: true,

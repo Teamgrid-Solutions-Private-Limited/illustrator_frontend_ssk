@@ -47,13 +47,13 @@ src/
 ├── Home/Codegenerator.jsx # Code generator + preview page
 ├── components/ # Header, Footer
 ├── assets/ # Logos & static assets
-├── Api/Api.js # API configuration
+├── Constant.js # API configuration
 ├── App.jsx # Main app + routing
 └── App.css # Custom styles
 ```
 
 ###  Configuration
-- **API URL** → `src/Api/Api.js`
+- **API URL** → `src/Constant.js`
 - **Base Path** → `vite.config.js` & `package.json` (for deployment under `/illustrata/embedsolution/`)
 
 ##  Contributing
