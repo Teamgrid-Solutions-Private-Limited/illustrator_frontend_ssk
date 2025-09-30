@@ -43,17 +43,17 @@ npm run preview
 ###  Project Structure
 ```
 src/
-├── Authentication/ # Login & route protection
-├── Home/Codegenerator.jsx # Code generator + preview page
+├── authentication/ # Login & route protection
+├── home/Codegenerator.jsx # Code generator + preview page
 ├── components/ # Header, Footer
 ├── assets/ # Logos & static assets
-├── Constant.js # API configuration
+├── constants/constants.js # API configuration
 ├── App.jsx # Main app + routing
-└── App.css # Custom styles
+└── styles/App.css # Custom styles
 ```
 
 ###  Configuration
-- **API URL** → `src/Constant.js`
+- **API URL** → `src/constants/constants.js`
 - **Base Path** → `vite.config.js` & `package.json` (for deployment under `/illustrata/embedsolution/`)
 
 ##  Contributing
