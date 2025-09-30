@@ -29,8 +29,8 @@ const LoginPage = () => {
   });
   const navigate = useNavigate();
 
-  const validateEmail = (email) =>
-    /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
+ const validateEmail = (email) =>
+  /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
 
   const validate = () => {
     const newErrors = {};
