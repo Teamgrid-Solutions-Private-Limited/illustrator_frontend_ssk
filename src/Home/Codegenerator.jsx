@@ -22,7 +22,7 @@ import { ContentCopy } from "@mui/icons-material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-
+import { ILLUSTRATOR_WIDGET_URL, EMBED_BASE_URL } from "../Constant";
 const products = [
   { id: 1103, name: "Demo, A Multi-Year Guaranteed Annuity" },
   { id: 1041, name: "Demo, A Fixed Indexed Annuity" },
@@ -58,7 +58,7 @@ function Codegenerator() {
 
   useEffect(() => {
     const productIds = selectedProducts.join(",");
-    const url = `https://illustrationinnovators.com/illustration/?product=${productIds}&accentColor=${encodeURIComponent(
+    const url = `${ILLUSTRATOR_WIDGET_URL}/?product=${productIds}&accentColor=${encodeURIComponent(
       accentColor
     )}&buttonColor=${encodeURIComponent(
       buttonColor
@@ -107,7 +107,7 @@ function Codegenerator() {
 
   const handleGenerateEmbedCode = () => {
     const productIds = selectedProducts.join(",");
-    const url = `https://demos.godigitalalchemy.com/illustrata/embed/illustration/?product=${productIds}&accentColor=${encodeURIComponent(
+    const url = `${EMBED_BASE_URL}/illustration/?product=${productIds}&accentColor=${encodeURIComponent(
       accentColor
     )}&buttonColor=${encodeURIComponent(
       buttonColor
@@ -380,7 +380,7 @@ function Codegenerator() {
                             <Box className="code-indent">
                               <span className="code-attribute">src</span>=
                               <span className="code-value">
-                                "https://demos.godigitalalchemy.com/illustrata/embed/autoheight.js"
+                                "{EMBED_BASE_URL}/autoheight.js"
                               </span>
                             </Box>
                             <Box className="code-line">{`></script>`}</Box>
