@@ -4,7 +4,6 @@ import Codegenerator from "./home/Codegenerator";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PrivateRoute from "./authentication/PrivateRoute";
-
 const theme = createTheme({
   typography: {
     fontFamily: `"proxima-nova", sans-serif`,
