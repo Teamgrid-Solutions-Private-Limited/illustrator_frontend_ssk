@@ -1,9 +1,9 @@
-import "./App.css";
-import Login from "./Authentication/Login";
-import Codegenerator from "./Home/Codegenerator";
+import "./styles/App.css";
+import Login from "./authentication/Login"
+import Codegenerator from "./home/Codegenerator";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import PrivateRoute from "./Authentication/PrivateRoute";
+import PrivateRoute from "./authentication/PrivateRoute";
 
 const theme = createTheme({
   typography: {

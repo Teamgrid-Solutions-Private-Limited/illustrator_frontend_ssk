@@ -21,7 +21,7 @@ import {
 import { ContentCopy } from "@mui/icons-material";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { EMBED_BASE_URL } from "../Constant";
+import { EMBED_BASE_URL } from "../constants/constants";
 const products = [
   { id: 1103, name: "Demo, A Multi-Year Guaranteed Annuity" },
   { id: 1041, name: "Demo, A Fixed Indexed Annuity" },
