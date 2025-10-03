@@ -17,6 +17,7 @@ import {
   FormControlLabel,
   Tabs,
   Tab,
+  CircularProgress,
 } from "@mui/material";
 import { ContentCopy } from "@mui/icons-material";
 import Header from "../components/Header";
@@ -39,6 +40,7 @@ function Codegenerator() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [showEmbedCode, setShowEmbedCode] = useState(false);
   const [activeTab, setActiveTab] = useState("code");
+  const [loading, setLoading] = useState(false);
 
   const handleProductToggle = (productId) => {
     setSelectedProducts((prev) =>
@@ -88,6 +90,7 @@ function Codegenerator() {
     )}&baseColor=${encodeURIComponent(baseColor.replace("#", ""))}`;
     setIframeUrl(url);
     setShowEmbedCode(true);
+    setLoading(true);
   };
 
   return (
@@ -126,8 +129,9 @@ function Codegenerator() {
                           return (
                             <ListItem
                               key={product.id}
-                              className={`product-list-item ${selected ? "selected" : ""
-                                }`}
+                              className={`product-list-item ${
+                                selected ? "selected" : ""
+                              }`}
                               onClick={() => handleProductToggle(product.id)}
                             >
                               <ListItemText
@@ -360,7 +364,29 @@ function Codegenerator() {
                       <Box className="preview-tab-content">
                         <Box className="preview-container">
                           {iframeUrl ? (
-                            <Box className="preview-iframe-wrapper">
+                            <Box
+                              className="preview-iframe-wrapper"
+                              sx={{ position: "relative" }}
+                            >
+                              {loading && (
+                                <Box
+                                  sx={{
+                                    position: "absolute",
+                                    top: "50%",
+                                    left: "50%",
+                                    transform: "translate(-50%, -50%)",
+                                    zIndex: 2,
+                                  }}
+                                >
+                                  <CircularProgress />
+                                  <Typography
+                                    variant="body2"
+                                    sx={{ mt: 1, color: "text.secondary" }}
+                                  >
+                                    Loading preview...
+                                  </Typography>
+                                </Box>
+                              )}
                               <iframe
                                 id="crossDomainIframe"
                                 src={iframeUrl}
@@ -369,6 +395,11 @@ function Codegenerator() {
                                 frameBorder="0"
                                 title="Embed Preview"
                                 className="preview-iframe"
+                                onLoad={() => setLoading(false)}
+                                style={{
+                                  opacity: loading ? 0 : 1,
+                                  transition: "opacity 0.3s ease",
+                                }}
                               />
                             </Box>
                           ) : (
@@ -379,7 +410,7 @@ function Codegenerator() {
                                 gutterBottom
                               >
                                 {selectedProducts &&
-                                  selectedProducts.length === 0
+                                selectedProducts.length === 0
                                   ? "Select at least one product to see preview"
                                   : "Loading preview..."}
                               </Typography>
