@@ -80,12 +80,12 @@ function Codegenerator() {
   const handleGenerateEmbedCode = () => {
     const productIds = selectedProducts.join(",");
     const url = `${EMBED_BASE_URL}/illustration/?product=${productIds}&accentColor=${encodeURIComponent(
-      accentColor
+      accentColor.replace("#", "")
     )}&buttonColor=${encodeURIComponent(
-      buttonColor
+      buttonColor.replace("#", "")
     )}&hoverColor=${encodeURIComponent(
-      hoverColor
-    )}&baseColor=${encodeURIComponent(baseColor)}`;
+      hoverColor.replace("#", "")
+    )}&baseColor=${encodeURIComponent(baseColor.replace("#", ""))}`;
     setIframeUrl(url);
     setShowEmbedCode(true);
   };
