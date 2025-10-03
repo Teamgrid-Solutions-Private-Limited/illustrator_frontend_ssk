@@ -88,9 +88,11 @@ function Codegenerator() {
     )}&hoverColor=${encodeURIComponent(
       hoverColor.replace("#", "")
     )}&baseColor=${encodeURIComponent(baseColor.replace("#", ""))}`;
-    setIframeUrl(url);
-    setShowEmbedCode(true);
-    setLoading(true);
+    if (url !== iframeUrl) {
+      setIframeUrl(url);
+      setShowEmbedCode(true);
+      setLoading(true);
+    }
   };
 
   return (
@@ -129,9 +131,8 @@ function Codegenerator() {
                           return (
                             <ListItem
                               key={product.id}
-                              className={`product-list-item ${
-                                selected ? "selected" : ""
-                              }`}
+                              className={`product-list-item ${selected ? "selected" : ""
+                                }`}
                               onClick={() => handleProductToggle(product.id)}
                             >
                               <ListItemText
@@ -369,18 +370,9 @@ function Codegenerator() {
                               sx={{ position: "relative" }}
                             >
                               {loading && (
-                                <Box
-                                  sx={{
-                                    position: "absolute",
-                                    top: "50%",
-                                    left: "50%",
-                                    transform: "translate(-50%, -50%)",
-                                    zIndex: 2,
-                                  }}
-                                >
-                                  <CircularProgress />
+                                <Box className="loader-wrapper">
+                                  <CircularProgress sx={{ color: "#11233E" }} />
                                   <Typography
-                                    variant="body2"
                                     sx={{ mt: 1, color: "text.secondary" }}
                                   >
                                     Loading preview...
@@ -410,7 +402,7 @@ function Codegenerator() {
                                 gutterBottom
                               >
                                 {selectedProducts &&
-                                selectedProducts.length === 0
+                                  selectedProducts.length === 0
                                   ? "Select at least one product to see preview"
                                   : "Loading preview..."}
                               </Typography>
