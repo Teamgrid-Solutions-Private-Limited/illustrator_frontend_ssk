@@ -51,11 +51,13 @@ function Codegenerator() {
 
   const [iframeUrl, setIframeUrl] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const [showEmbedCode, setShowEmbedCode] = useState(false);
   const [activeTab, setActiveTab] = useState("code");
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [themeName, setThemeName] = useState("");
+  const [themeName, setThemeName] = useState("Life Innovator");
   const [themes, setThemes] = useState([]);
 
   const handleProductToggle = (productId) => {
@@ -75,11 +77,18 @@ function Codegenerator() {
   };
   const handleOpenDialog = () => {
     setIsOpen(true);
-    setThemeName('');
+    setThemeName("");
   };
 
   const handleSaveTheme = async () => {
     try {
+      if (!themeName.trim()) {
+        setSnackbarMessage("Please enter theme name");
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+        return;
+      }
+
       const res = await axios.post(`${BASE_API_URL}/api/color-themes`, {
         themeName,
         accentColor: newAccentColor,
@@ -88,10 +97,16 @@ function Codegenerator() {
         baseColor: newBaseColor,
       });
 
-      alert(res.data.message || "Theme created successfully");
+      setSnackbarMessage(res.data.message || "Theme created successfully");
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
       setIsOpen(false);
     } catch (error) {
-      alert(error.response?.data?.message || "Something went wrong");
+      setSnackbarMessage(
+        error.response?.data?.message || "Something went wrong"
+      );
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
       console.error("Error saving theme:", error);
     }
   };
@@ -114,16 +129,22 @@ function Codegenerator() {
     <script src="https://demos.godigitalalchemy.com/illustrata/embed/autoheight.js"></script>`;
   };
 
-  const copyToClipboard = () => {
-    navigator.clipboard
-      .writeText(generateEmbedCode())
-      .then(() => {
-        setSnackbarOpen(true);
-      })
-      .catch((err) => {
-        console.error("Failed to copy: ", err);
-      });
-  };
+ const copyToClipboard = () => {
+  navigator.clipboard
+    .writeText(generateEmbedCode())
+    .then(() => {
+      setSnackbarMessage("Embed code copied to clipboard!");
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
+    })
+    .catch((err) => {
+      setSnackbarMessage("Failed to copy embed code");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+      console.error("Failed to copy: ", err);
+    });
+};
+
 
   const handleSnackbarClose = (event, reason) => {
     if (reason === "clickaway") return;
@@ -210,14 +231,8 @@ function Codegenerator() {
                   </Typography>
 
                   <Grid item xs={12} className="color-customization-grid">
-                    <Box
-                     className="color-customization-inputs"
-                     mt={1}
-                     mb={2}
-                    >
-                      <FormControl
-                        
-                      >
+                    <Box className="color-customization-inputs" mt={1} mb={2}>
+                      <FormControl>
                         <InputLabel
                           id="theme-select-label"
                           sx={{
@@ -274,7 +289,6 @@ function Codegenerator() {
                         </Select>
                       </FormControl>
 
-      
                       <Typography
                         onClick={handleOpenDialog}
                         sx={{
@@ -283,7 +297,7 @@ function Codegenerator() {
                           fontSize: "16px",
                           cursor: "pointer",
                           color: "#11233E",
-                          "&:hover": { color:"#061429ff" },
+                          "&:hover": { color: "#061429ff" },
                           whiteSpace: "nowrap",
                         }}
                       >
@@ -431,60 +445,69 @@ function Codegenerator() {
                         variant="outlined"
                         className="color-settings-panel"
                       >
-                        <Box className="color-settings-header">
-                          <Typography variant="h6" gutterBottom>
-                            {
-                              themes.find((t) => t.themeName === themeName)
-                                ?.themeName
-                            }
-                          </Typography>
-                        </Box>
-                        <Grid container spacing={2}>
-                          <Grid item xs={6}>
-                            <Box className="color-preview">
-                              <Box
-                                className="color-circle"
-                                style={{ backgroundColor: accentColor }}
-                              />
-                              <Typography variant="subtitle2">
-                                Accent: {accentColor}
-                              </Typography>
-                            </Box>
-                          </Grid>
-                          <Grid item xs={6}>
-                            <Box className="color-preview">
-                              <Box
-                                className="color-circle"
-                                style={{ backgroundColor: buttonColor }}
-                              />
-                              <Typography variant="subtitle2">
-                                Button: {buttonColor}
-                              </Typography>
-                            </Box>
-                          </Grid>
-                          <Grid item xs={6}>
-                            <Box className="color-preview">
-                              <Box
-                                className="color-circle"
-                                style={{ backgroundColor: hoverColor }}
-                              />
-                              <Typography variant="subtitle2">
-                                Hover: {hoverColor}
-                              </Typography>
-                            </Box>
-                          </Grid>
-                          <Grid item xs={6}>
-                            <Box className="color-preview">
-                              <Box
-                                className="color-circle"
-                                style={{ backgroundColor: baseColor }}
-                              />
-                              <Typography variant="subtitle2">
-                                Base: {baseColor}
-                              </Typography>
-                            </Box>
-                          </Grid>
-                        </Grid>
+                      <Box className="color-settings-header">
+  <Typography variant="h6" gutterBottom>
+    {themes.find((t) => t.themeName === themeName)?.themeName || "No Theme Selected"}
+  </Typography>
+</Box>
+
+{(() => {
+  const selectedTheme = themes.find((t) => t.themeName === themeName);
+  if (!selectedTheme) return null;
+
+  return (
+    <Grid container spacing={2}>
+      <Grid item xs={6}>
+        <Box className="color-preview">
+          <Box
+            className="color-circle"
+            style={{ backgroundColor: selectedTheme.accentColor }}
+          />
+          <Typography variant="subtitle2">
+            Accent: {selectedTheme.accentColor}
+          </Typography>
+        </Box>
+      </Grid>
+
+      <Grid item xs={6}>
+        <Box className="color-preview">
+          <Box
+            className="color-circle"
+            style={{ backgroundColor: selectedTheme.buttonColor }}
+          />
+          <Typography variant="subtitle2">
+            Button: {selectedTheme.buttonColor}
+          </Typography>
+        </Box>
+      </Grid>
+
+      <Grid item xs={6}>
+        <Box className="color-preview">
+          <Box
+            className="color-circle"
+            style={{ backgroundColor: selectedTheme.hoverColor }}
+          />
+          <Typography variant="subtitle2">
+            Hover: {selectedTheme.hoverColor}
+          </Typography>
+        </Box>
+      </Grid>
+
+      <Grid item xs={6}>
+        <Box className="color-preview">
+          <Box
+            className="color-circle"
+            style={{ backgroundColor: selectedTheme.baseColor }}
+          />
+          <Typography variant="subtitle2">
+            Base: {selectedTheme.baseColor}
+          </Typography>
+        </Box>
+      </Grid>
+    </Grid>
+  );
+})()}
+
                       </Paper>
                     )}
                   </Grid>
@@ -639,12 +662,12 @@ function Codegenerator() {
             anchorOrigin={{ vertical: "top", horizontal: "center" }}
           >
             <Alert
-              className="customAlert "
+              className="customAlert"
               onClose={handleSnackbarClose}
-              severity="success"
+              severity={snackbarSeverity}
               sx={{ width: "100%" }}
             >
-              Embed code copied to clipboard!
+              {snackbarMessage}
             </Alert>
           </Snackbar>
         </Container>

@@ -269,6 +269,12 @@
   border-bottom-right-radius: 0 !important;
   border-bottom: 1px solid #e0e0e0;
 }
+.MuiTabs-indicator {
+  background-color: #9a9a9a !important; 
+  height: 3px;
+  border-radius: 2px; 
+}
+
 
 .embed-tabs {
   min-height: 48px;
