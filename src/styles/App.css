@@ -2,6 +2,7 @@
   margin: 0;
   font-family: "proxima-nova", sans-serif !important;
 }
+
 .container{
   height: calc(100vh - 131px);
   background: linear-gradient(-315deg, #f5f7fa 50%, #cce0ff 100%);

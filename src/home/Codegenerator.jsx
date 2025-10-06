@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Container,
@@ -18,11 +18,18 @@ import {
   Tabs,
   Tab,
   CircularProgress,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  Dialog,
 } from "@mui/material";
 import { ContentCopy } from "@mui/icons-material";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { EMBED_BASE_URL } from "../constants/constants";
+import { BASE_API_URL } from "../constants/constants";
+import axios from "axios";
 const products = [
   { id: 1103, name: "Demo, A Multi-Year Guaranteed Annuity" },
   { id: 1041, name: "Demo, A Fixed Indexed Annuity" },
@@ -36,11 +43,19 @@ function Codegenerator() {
   const [buttonColor, setButtonColor] = useState("#ffc000");
   const [hoverColor, setHoverColor] = useState("#f8f9fa");
   const [baseColor, setBaseColor] = useState("#ebf3f9");
+  const [newAccentColor, setNewAccentColor] = useState("#131e27");
+  const [newButtonColor, setNewButtonColor] = useState("#ffc000");
+  const [newHoverColor, setNewHoverColor] = useState("#f8f9fa");
+  const [newBaseColor, setNewBaseColor] = useState("#ebf3f9");
+
   const [iframeUrl, setIframeUrl] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [showEmbedCode, setShowEmbedCode] = useState(false);
   const [activeTab, setActiveTab] = useState("code");
   const [loading, setLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [themeName, setThemeName] = useState("");
+  const [themes, setThemes] = useState([]);
 
   const handleProductToggle = (productId) => {
     setSelectedProducts((prev) =>
@@ -57,6 +72,40 @@ function Codegenerator() {
       setSelectedProducts(products.map((p) => p.id));
     }
   };
+  const handleOpenDialog = () => {
+    setIsOpen(true);
+  };
+
+  const handleSaveTheme = async () => {
+    try {
+      const res = await axios.post(`${BASE_API_URL}/api/color-themes`, {
+        themeName,
+        accentColor: newAccentColor,
+        buttonColor: newButtonColor,
+        hoverColor: newHoverColor,
+        baseColor: newBaseColor,
+      });
+
+      alert(res.data.message || "Theme created successfully");
+      setIsOpen(false);
+    } catch (error) {
+      alert(error.response?.data?.message || "Something went wrong");
+      console.error("Error saving theme:", error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchThemes = async () => {
+      try {
+        const res = await axios.get(`${BASE_API_URL}/api/color-themes`);
+        setThemes(res.data.data || []);
+        console.log("Fetched themes:", res.data);
+      } catch (error) {
+        console.error("Error fetching themes:", error);
+      }
+    };
+    fetchThemes();
+  }, []);
 
   const generateEmbedCode = () => {
     return `<iframe id="crossDomainIframe" src="${iframeUrl}" width="100%" height="600" frameborder="0"></iframe>
@@ -131,8 +180,9 @@ function Codegenerator() {
                           return (
                             <ListItem
                               key={product.id}
-                              className={`product-list-item ${selected ? "selected" : ""
-                                }`}
+                              className={`product-list-item ${
+                                selected ? "selected" : ""
+                              }`}
                               onClick={() => handleProductToggle(product.id)}
                             >
                               <ListItemText
@@ -151,11 +201,192 @@ function Codegenerator() {
                     </Paper>
                   </Grid>
                 </Paper>
+
                 <Paper className="config-custom-paper">
                   <Typography className="config-custom-typo">
-                    Color Customization
+                    Set Color Theme
                   </Typography>
+
                   <Grid item xs={12} className="color-customization-grid">
+                    <Button
+                      onClick={handleOpenDialog}
+                      variant="contained"
+                      sx={{
+                        width: "40%",
+                        mb: 2,
+                        backgroundColor: "#11233E",
+                        ml: "60%",
+                      }}
+                    >
+                      Create Color Theme
+                    </Button>
+                    <Grid item xs={12} className="color-customization-grid">
+                      <Box
+                        className="color-customization-inputs"
+                        sx={{
+                          display: "flex",
+                          flexDirection: { xs: "column", sm: "row" },
+                          gap: 2,
+                          alignItems: "center",
+                          width: "100%",
+                        }}
+                      >
+                        <FormControl
+                          fullWidth
+                          sx={{
+                            minWidth: 180,
+                          }}
+                        >
+                          <InputLabel id="theme-select-label">Theme</InputLabel>
+                          <Select
+                            labelId="theme-select-label"
+                            value={themeName}
+                            label="Theme"
+                            onChange={(e) => {
+                              const selectedThemeName = e.target.value;
+                              setThemeName(selectedThemeName);
+
+                              if (selectedThemeName === "custom") {
+                                setAccentColor("#131e27");
+                                setButtonColor("#ffc000");
+                                setHoverColor("#f8f9fa");
+                                setBaseColor("#ebf3f9");
+                              } else {
+                                const selectedTheme = themes.find(
+                                  (theme) =>
+                                    theme.themeName === selectedThemeName
+                                );
+                                if (selectedTheme) {
+                                  setAccentColor(
+                                    selectedTheme.accentColor || "#131e27"
+                                  );
+                                  setButtonColor(
+                                    selectedTheme.buttonColor || "#ffc000"
+                                  );
+                                  setHoverColor(
+                                    selectedTheme.hoverColor || "#f8f9fa"
+                                  );
+                                  setBaseColor(
+                                    selectedTheme.baseColor || "#ebf3f9"
+                                  );
+                                }
+                              }
+                            }}
+                            sx={{
+                              borderRadius: 1,
+                              height: 45,
+                            }}
+                          >
+                            {themes.map((theme) => (
+                              <MenuItem key={theme._id} value={theme.themeName}>
+                                {theme.themeName}
+                              </MenuItem>
+                            ))}
+                            <MenuItem value="custom">Custom</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Box>
+                    </Grid>
+
+                    <Dialog
+                      open={isOpen}
+                      onClose={() => setIsOpen(false)}
+                      PaperProps={{
+                        sx: {
+                          borderRadius: 3,
+                          p: 3,
+                          width: { xs: "90%", sm: 400 },
+                          background: "#f9f9f9",
+                          boxShadow: "0px 4px 20px rgba(0,0,0,0.1)",
+                        },
+                      }}
+                    >
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontWeight: 600,
+                          color: "#11233E",
+                          mb: 2,
+                          textAlign: "center",
+                        }}
+                      >
+                        Create Color Theme
+                      </Typography>
+
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        gap={2}
+                        sx={{ mb: 2 }}
+                      >
+                        <TextField
+                          fullWidth
+                          label="Theme Name"
+                          type="text"
+                          value={themeName}
+                          onChange={(e) => setThemeName(e.target.value)}
+                        />
+                        <TextField
+                          fullWidth
+                          label="Accent Color"
+                          type="color"
+                          value={newAccentColor}
+                          onChange={(e) => setNewAccentColor(e.target.value)}
+                          InputLabelProps={{ shrink: true }}
+                        />
+                        <TextField
+                          fullWidth
+                          label="Button Color"
+                          type="color"
+                          value={newButtonColor}
+                          onChange={(e) => setNewButtonColor(e.target.value)}
+                          InputLabelProps={{ shrink: true }}
+                        />
+                        <TextField
+                          fullWidth
+                          label="Hover Color"
+                          type="color"
+                          value={newHoverColor}
+                          onChange={(e) => setNewHoverColor(e.target.value)}
+                          InputLabelProps={{ shrink: true }}
+                        />
+                        <TextField
+                          fullWidth
+                          label="Base Color"
+                          type="color"
+                          value={newBaseColor}
+                          onChange={(e) => setNewBaseColor(e.target.value)}
+                          InputLabelProps={{ shrink: true }}
+                        />
+                      </Box>
+
+                      <Box
+                        display="flex"
+                        justifyContent="space-between"
+                        gap={2}
+                      >
+                        <Button
+                          variant="outlined"
+                          color="error"
+                          fullWidth
+                          onClick={() => setIsOpen(false)}
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          variant="contained"
+                          fullWidth
+                          onClick={handleSaveTheme}
+                          sx={{
+                            backgroundColor: "#11233E",
+                            "&:hover": { backgroundColor: "#0a1a2f" },
+                          }}
+                        >
+                          Save
+                        </Button>
+                      </Box>
+                    </Dialog>
+
                     <Box className="color-customization-inputs">
                       <TextField
                         fullWidth
@@ -190,7 +421,7 @@ function Codegenerator() {
                         InputLabelProps={{ shrink: true }}
                       />
                     </Box>
-                    <Paper variant="outlined" className="color-settings-panel">
+                    {/* <Paper variant="outlined" className="color-settings-panel">
                       <Typography variant="h6" className="color-settings-title">
                         Current Settings
                       </Typography>
@@ -271,7 +502,7 @@ function Codegenerator() {
                           </Box>
                         </Grid>
                       </Grid>
-                    </Paper>
+                    </Paper> */}
                   </Grid>
                 </Paper>
               </Grid>
@@ -402,7 +633,7 @@ function Codegenerator() {
                                 gutterBottom
                               >
                                 {selectedProducts &&
-                                  selectedProducts.length === 0
+                                selectedProducts.length === 0
                                   ? "Select at least one product to see preview"
                                   : "Loading preview..."}
                               </Typography>
