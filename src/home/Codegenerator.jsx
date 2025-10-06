@@ -274,46 +274,28 @@ function Codegenerator() {
                       </FormControl>
 
       
-                      <Typography
+                      <Button
+                        variant="outlined"
                         onClick={handleOpenDialog}
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          fontSize: "16px",
-                          cursor: "pointer",
-                          color: "#11233E",
-                          "&:hover": { color:"#061429ff" },
-                          whiteSpace: "nowrap",
-                        }}
+                        className="createThemeBtn"
                       >
                         <AddIcon sx={{ fontSize: "18px", mr: 0.5 }} /> Create
                         new color theme
-                      </Typography>
+                      </Button>
                     </Box>
 
                     <Dialog
                       open={isOpen}
                       onClose={() => setIsOpen(false)}
                       PaperProps={{
-                        sx: {
-                          borderRadius: 3,
-                          p: 3,
-                          width: { xs: "90%", sm: 400 },
-                          background: "#f9f9f9",
-                          boxShadow: "0px 4px 20px rgba(0,0,0,0.1)",
-                        },
+                       className:"dialogBox"
                       }}
                     >
                       <Typography
                         variant="h6"
-                        sx={{
-                          fontWeight: 600,
-                          color: "#11233E",
-                          mb: 2,
-                          textAlign: "center",
-                        }}
+                        className="dialog-title"
                       >
-                        Create Color Theme
+                        Create new color theme
                       </Typography>
 
                       <Box
@@ -329,7 +311,8 @@ function Codegenerator() {
                           value={themeName}
                           onChange={(e) => setThemeName(e.target.value)}
                         />
-                        <TextField
+                        <Box className="color-customization-inputs">
+                          <TextField
                           fullWidth
                           label="Accent Color"
                           type="color"
@@ -361,6 +344,7 @@ function Codegenerator() {
                           onChange={(e) => setNewBaseColor(e.target.value)}
                           InputLabelProps={{ shrink: true }}
                         />
+                        </Box>
                       </Box>
 
                       <Box
