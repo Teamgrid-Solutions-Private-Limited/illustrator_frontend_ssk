@@ -297,7 +297,7 @@
 }
 
 .code-tab-content {
-  padding: 16px;
+  padding: 32px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -382,8 +382,6 @@
   background: white !important;
   color: #0d1b3d !important;
   border-radius: 20px !important;
-  padding-left: 32px !important;
-  padding-right: 32px !important;
   padding-top: 16px !important;
   padding-bottom: 16px !important;
   margin-top: 16px !important;
@@ -396,6 +394,8 @@
 
 .header-toolbar {
   justify-content: space-between !important;
+    padding-left: 32px !important;
+  padding-right: 32px !important;
 }
 
 .header-logo {
