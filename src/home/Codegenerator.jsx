@@ -29,8 +29,9 @@ import { ContentCopy } from "@mui/icons-material";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { EMBED_BASE_URL } from "../constants/constants";
-import { BASE_API_URL } from "../constants/constants";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchColorThemes, createColorTheme, clearMessages } from "../redux/reducer/colorThemeSlice";
+
 const products = [
   { id: 1103, name: "Demo, A Multi-Year Guaranteed Annuity" },
   { id: 1041, name: "Demo, A Fixed Indexed Annuity" },
@@ -53,10 +54,12 @@ function Codegenerator() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [showEmbedCode, setShowEmbedCode] = useState(false);
   const [activeTab, setActiveTab] = useState("code");
-  const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [themeName, setThemeName] = useState("");
-  const [themes, setThemes] = useState([]);
+  // const [themes, setThemes] = useState([]);
+const dispatch = useDispatch();
+const { themes, loading, error, successMessage } = useSelector((state) => state.colorThemes);
+  const [loadingg, setLoadingg] = useState(loading);
 
   const handleProductToggle = (productId) => {
     setSelectedProducts((prev) =>
@@ -78,36 +81,23 @@ function Codegenerator() {
     setThemeName('');
   };
 
-  const handleSaveTheme = async () => {
-    try {
-      const res = await axios.post(`${BASE_API_URL}/api/color-themes`, {
-        themeName,
-        accentColor: newAccentColor,
-        buttonColor: newButtonColor,
-        hoverColor: newHoverColor,
-        baseColor: newBaseColor,
-      });
+ const handleSaveTheme = async () => {
+  dispatch(createColorTheme({
+    themeName,
+    accentColor: newAccentColor,
+    buttonColor: newButtonColor,
+    hoverColor: newHoverColor,
+    baseColor: newBaseColor,
+  }));
+  setIsOpen(false);
+};
 
-      alert(res.data.message || "Theme created successfully");
-      setIsOpen(false);
-    } catch (error) {
-      alert(error.response?.data?.message || "Something went wrong");
-      console.error("Error saving theme:", error);
-    }
-  };
+ useEffect(() => {
+  dispatch(fetchColorThemes());
+}, [dispatch]);
 
-  useEffect(() => {
-    const fetchThemes = async () => {
-      try {
-        const res = await axios.get(`${BASE_API_URL}/api/color-themes`);
-        setThemes(res.data.data || []);
-        console.log("Fetched themes:", res.data);
-      } catch (error) {
-        console.error("Error fetching themes:", error);
-      }
-    };
-    fetchThemes();
-  }, []);
+
+
 
   const generateEmbedCode = () => {
     return `<iframe id="crossDomainIframe" src="${iframeUrl}" width="100%" height="600" frameborder="0"></iframe>
@@ -142,7 +132,7 @@ function Codegenerator() {
     if (url !== iframeUrl) {
       setIframeUrl(url);
       setShowEmbedCode(true);
-      setLoading(true);
+      setLoadingg(true);
     }
   };
 
@@ -584,7 +574,7 @@ function Codegenerator() {
                               className="preview-iframe-wrapper"
                               sx={{ position: "relative" }}
                             >
-                              {loading && (
+                              {loadingg && (
                                 <Box className="loader-wrapper">
                                   <CircularProgress sx={{ color: "#11233E" }} />
                                   <Typography
@@ -602,9 +592,9 @@ function Codegenerator() {
                                 frameBorder="0"
                                 title="Embed Preview"
                                 className="preview-iframe"
-                                onLoad={() => setLoading(false)}
+                                onLoad={() => setLoadingg(false)}
                                 style={{
-                                  opacity: loading ? 0 : 1,
+                                  opacity: loadingg ? 0 : 1,
                                   transition: "opacity 0.3s ease",
                                 }}
                               />

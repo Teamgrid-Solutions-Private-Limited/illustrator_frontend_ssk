@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-    "homepage": "/illustrata/embedsolution/",
+  "homepage": "/illustrata/embedsolution/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -15,9 +15,11 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.2",
     "@mui/material": "^7.3.2",
+    "@reduxjs/toolkit": "^2.9.0",
     "axios": "^1.12.2",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-redux": "^9.2.0",
     "react-router-dom": "^7.9.2"
   },
   "devDependencies": {
