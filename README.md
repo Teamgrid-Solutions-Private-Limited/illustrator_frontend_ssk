@@ -5,7 +5,7 @@ A **React + Vite** frontend for the *Illustrata Embed Solution*, providing secur
 ---
 
 ##  Features
--  **Secure Login** – JWT-based authentication  
+-  **Secure Login** – JWT-based auth  
 -  **Code Generator** – Generate iframe embed code for products  
 -  **Customizable Colors** – Adjust illustration colors before embedding  
 -  **Live Preview** – See changes instantly  
@@ -43,7 +43,7 @@ npm run preview
 ###  Project Structure
 ```
 src/
-├── authentication/ # Login & route protection
+├── auth/ # Login & route protection
 ├── home/Codegenerator.jsx # Code generator + preview page
 ├── components/ # Header, Footer
 ├── assets/ # Logos & static assets
