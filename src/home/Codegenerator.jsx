@@ -390,122 +390,102 @@ function Codegenerator() {
                       </Box>
                     </Dialog>
 
-                    <Box className="color-customization-inputs">
-                      <TextField
-                        fullWidth
-                        label="Accent Color"
-                        type="color"
-                        value={accentColor}
-                        onChange={(e) => setAccentColor(e.target.value)}
-                        InputLabelProps={{ shrink: true }}
-                      />
-                      <TextField
-                        fullWidth
-                        label="Button Color"
-                        type="color"
-                        value={buttonColor}
-                        onChange={(e) => setButtonColor(e.target.value)}
-                        InputLabelProps={{ shrink: true }}
-                      />
-                      <TextField
-                        fullWidth
-                        label="Hover Color"
-                        type="color"
-                        value={hoverColor}
-                        onChange={(e) => setHoverColor(e.target.value)}
-                        InputLabelProps={{ shrink: true }}
-                      />
-                      <TextField
-                        fullWidth
-                        label="Base Color"
-                        type="color"
-                        value={baseColor}
-                        onChange={(e) => setBaseColor(e.target.value)}
-                        InputLabelProps={{ shrink: true }}
-                      />
-                    </Box>
-                    {/* <Paper variant="outlined" className="color-settings-panel">
-                      <Typography variant="h6" className="color-settings-title">
-                        Current Settings
-                      </Typography>
-                      <Typography
-                        variant="subtitle2"
-                        className="color-settings-subtitle"
-                      >
-                        Products Selected:
-                      </Typography>
-                      <Box className="selected-products">
-                        {selectedProducts.length > 0 ? (
-                          selectedProducts.map((id) => {
-                            const product = products.find((p) => p.id === id);
-                            return (
-                              <Chip
-                                key={id}
-                                label={product?.name}
-                                size="small"
-                                color="primary"
-                                variant="filled"
-                                className="custom-chip"
-                              />
-                            );
-                          })
-                        ) : (
-                          <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            fontStyle="italic"
-                          >
-                            No products selected
-                          </Typography>
-                        )}
+                    {themeName === "custom" ? (
+                      <Box className="color-customization-inputs">
+                        <TextField
+                          fullWidth
+                          label="Accent Color"
+                          type="color"
+                          value={accentColor}
+                          onChange={(e) => setAccentColor(e.target.value)}
+                          InputLabelProps={{ shrink: true }}
+                        />
+                        <TextField
+                          fullWidth
+                          label="Button Color"
+                          type="color"
+                          value={buttonColor}
+                          onChange={(e) => setButtonColor(e.target.value)}
+                          InputLabelProps={{ shrink: true }}
+                        />
+                        <TextField
+                          fullWidth
+                          label="Hover Color"
+                          type="color"
+                          value={hoverColor}
+                          onChange={(e) => setHoverColor(e.target.value)}
+                          InputLabelProps={{ shrink: true }}
+                        />
+                        <TextField
+                          fullWidth
+                          label="Base Color"
+                          type="color"
+                          value={baseColor}
+                          onChange={(e) => setBaseColor(e.target.value)}
+                          InputLabelProps={{ shrink: true }}
+                        />
                       </Box>
-                      <Grid container spacing={2}>
-                        <Grid item xs={6}>
-                          <Box className="color-preview">
-                            <Box
-                              className="color-circle"
-                              style={{ backgroundColor: accentColor }}
-                            />
-                            <Typography variant="subtitle2">
-                              Accent: {accentColor}
-                            </Typography>
-                          </Box>
+                    ) : (
+                      <Paper
+                        variant="outlined"
+                        className="color-settings-panel"
+                      >
+                        <Box className="color-settings-header">
+                          <Typography variant="h6" gutterBottom>
+                            {
+                              themes.find((t) => t.themeName === themeName)
+                                ?.themeName
+                            }
+                          </Typography>
+                        </Box>
+                        <Grid container spacing={2}>
+                          <Grid item xs={6}>
+                            <Box className="color-preview">
+                              <Box
+                                className="color-circle"
+                                style={{ backgroundColor: accentColor }}
+                              />
+                              <Typography variant="subtitle2">
+                                Accent: {accentColor}
+                              </Typography>
+                            </Box>
+                          </Grid>
+                          <Grid item xs={6}>
+                            <Box className="color-preview">
+                              <Box
+                                className="color-circle"
+                                style={{ backgroundColor: buttonColor }}
+                              />
+                              <Typography variant="subtitle2">
+                                Button: {buttonColor}
+                              </Typography>
+                            </Box>
+                          </Grid>
+                          <Grid item xs={6}>
+                            <Box className="color-preview">
+                              <Box
+                                className="color-circle"
+                                style={{ backgroundColor: hoverColor }}
+                              />
+                              <Typography variant="subtitle2">
+                                Hover: {hoverColor}
+                              </Typography>
+                            </Box>
+                          </Grid>
+                          <Grid item xs={6}>
+                            <Box className="color-preview">
+                              <Box
+                                className="color-circle"
+                                style={{ backgroundColor: baseColor }}
+                              />
+                              <Typography variant="subtitle2">
+                                Base: {baseColor}
+                              </Typography>
+                            </Box>
+                          </Grid>
                         </Grid>
-                        <Grid item xs={6}>
-                          <Box className="color-preview">
-                            <Box
-                              className="color-circle"
-                              style={{ backgroundColor: buttonColor }}
-                            />
-                            <Typography variant="subtitle2">
-                              Button: {buttonColor}
-                            </Typography>
-                          </Box>
-                        </Grid>
-                        <Grid item xs={6}>
-                          <Box className="color-preview">
-                            <Box
-                              className="color-circle"
-                              style={{ backgroundColor: hoverColor }}
-                            />
-                            <Typography variant="subtitle2">
-                              Hover: {hoverColor}
-                            </Typography>
-                          </Box>
-                        </Grid>
-                        <Grid item xs={6}>
-                          <Box className="color-preview">
-                            <Box
-                              className="color-circle"
-                              style={{ backgroundColor: baseColor }}
-                            />
-                            <Typography variant="subtitle2">
-                              Base: {baseColor}
-                            </Typography>
-                          </Box>
-                        </Grid>
-                      </Grid>
-                    </Paper> */}
+                      </Paper>
+                    )}
                   </Grid>
                 </Paper>
               </Grid>
