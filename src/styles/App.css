@@ -130,6 +130,34 @@
   font-weight: 600 !important;
   font-size: 20px !important;
 }
+.createThemeBtn{
+  display: flex;
+  align-items: center;
+  font-size: 15px !important;
+  cursor: pointer;
+  color: #000;
+  white-space: nowrap;
+  text-transform: none !important;
+}
+.createThemeBtn:hover{
+  color:#373636
+}
+.dialogBox{
+  border-radius: 12px !important;
+  padding: 24px;
+  width: 300px;
+  background-color: #f9f9f9;
+  box-shadow: 0px 4px 20px rgba(0,0,0,0.1);
+}
+
+.dialog-title {
+  font-weight: 600 !important;
+  color: #11233e !important;
+  margin-bottom: 16px !important;
+  text-align: center !important;
+}
+
+
 .secondary-grid{
   display: flex;
   flex-direction: column;
@@ -353,7 +381,7 @@
 }
 
 .preview-tab-content {
-  padding: 16px;
+  padding: 32px;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -387,7 +415,7 @@
 .custom-header {
   background: white !important;
   color: #0d1b3d !important;
-  border-radius: 20px !important;
+  border-radius: 8px !important;
   padding-top: 16px !important;
   padding-bottom: 16px !important;
   margin-top: 16px !important;
@@ -410,7 +438,7 @@
 
 .logout-button {
   background-color: #016cd6 !important;
-  border-radius: 10px !important;
+  border-radius: 8px !important;
   padding-left: 24px !important;
   padding-right: 24px !important;
   font-weight: 400 !important;
@@ -525,5 +553,8 @@
     margin-left: 4px;
     margin-right: 4px;
     max-width: 280px;
+  }
+  .dialogBox{
+    width: 90%;
   }
 }
