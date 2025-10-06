@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Container,
@@ -18,11 +18,20 @@ import {
   Tabs,
   Tab,
   CircularProgress,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  Dialog,
 } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import { ContentCopy } from "@mui/icons-material";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { EMBED_BASE_URL } from "../constants/constants";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchColorThemes, createColorTheme, clearMessages } from "../redux/reducer/colorThemeSlice";
+
 const products = [
   { id: 1103, name: "Demo, A Multi-Year Guaranteed Annuity" },
   { id: 1041, name: "Demo, A Fixed Indexed Annuity" },
@@ -36,11 +45,23 @@ function Codegenerator() {
   const [buttonColor, setButtonColor] = useState("#ffc000");
   const [hoverColor, setHoverColor] = useState("#f8f9fa");
   const [baseColor, setBaseColor] = useState("#ebf3f9");
+  const [newAccentColor, setNewAccentColor] = useState("#131e27");
+  const [newButtonColor, setNewButtonColor] = useState("#ffc000");
+  const [newHoverColor, setNewHoverColor] = useState("#f8f9fa");
+  const [newBaseColor, setNewBaseColor] = useState("#ebf3f9");
+
   const [iframeUrl, setIframeUrl] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const [showEmbedCode, setShowEmbedCode] = useState(false);
   const [activeTab, setActiveTab] = useState("code");
-  const [loading, setLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [themeName, setThemeName] = useState("Life Innovator");
+  // const [themes, setThemes] = useState([]);
+const dispatch = useDispatch();
+const { themes, loading, error, successMessage } = useSelector((state) => state.colorThemes);
+  const [loadingg, setLoadingg] = useState(loading);
 
   const handleProductToggle = (productId) => {
     setSelectedProducts((prev) =>
@@ -57,22 +78,73 @@ function Codegenerator() {
       setSelectedProducts(products.map((p) => p.id));
     }
   };
+  const handleOpenDialog = () => {
+    setIsOpen(true);
+    setThemeName("");
+  };
+
+ const handleSaveTheme = async () => {
+  try{
+      if (!themeName.trim()) {
+        setSnackbarMessage("Please enter theme name");
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+        return;
+      }
+
+     dispatch(createColorTheme({
+    themeName,
+    accentColor: newAccentColor,
+    buttonColor: newButtonColor,
+    hoverColor: newHoverColor,
+    baseColor: newBaseColor,
+  }));
+ 
+
+   setSnackbarMessage( "Theme created successfully");
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
+      setIsOpen(false);
+    } catch (error) {
+      setSnackbarMessage(
+         "Something went wrong"
+      );
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+      console.error("Error saving theme:", error);
+    }
+
+ 
+};
+
+ useEffect(() => {
+  dispatch(fetchColorThemes());
+}, [dispatch]);
+
+
+
 
   const generateEmbedCode = () => {
     return `<iframe id="crossDomainIframe" src="${iframeUrl}" width="100%" height="600" frameborder="0"></iframe>
     <script src="https://demos.godigitalalchemy.com/illustrata/embed/autoheight.js"></script>`;
   };
 
-  const copyToClipboard = () => {
-    navigator.clipboard
-      .writeText(generateEmbedCode())
-      .then(() => {
-        setSnackbarOpen(true);
-      })
-      .catch((err) => {
-        console.error("Failed to copy: ", err);
-      });
-  };
+ const copyToClipboard = () => {
+  navigator.clipboard
+    .writeText(generateEmbedCode())
+    .then(() => {
+      setSnackbarMessage("Embed code copied to clipboard!");
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
+    })
+    .catch((err) => {
+      setSnackbarMessage("Failed to copy embed code");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+      console.error("Failed to copy: ", err);
+    });
+};
+
 
   const handleSnackbarClose = (event, reason) => {
     if (reason === "clickaway") return;
@@ -91,7 +163,7 @@ function Codegenerator() {
     if (url !== iframeUrl) {
       setIframeUrl(url);
       setShowEmbedCode(true);
-      setLoading(true);
+      setLoadingg(true);
     }
   };
 
@@ -131,8 +203,9 @@ function Codegenerator() {
                           return (
                             <ListItem
                               key={product.id}
-                              className={`product-list-item ${selected ? "selected" : ""
-                                }`}
+                              className={`product-list-item ${
+                                selected ? "selected" : ""
+                              }`}
                               onClick={() => handleProductToggle(product.id)}
                             >
                               <ListItemText
@@ -151,127 +224,277 @@ function Codegenerator() {
                     </Paper>
                   </Grid>
                 </Paper>
+
                 <Paper className="config-custom-paper">
                   <Typography className="config-custom-typo">
                     Color Customization
                   </Typography>
+
                   <Grid item xs={12} className="color-customization-grid">
-                    <Box className="color-customization-inputs">
-                      <TextField
-                        fullWidth
-                        label="Accent Color"
-                        type="color"
-                        value={accentColor}
-                        onChange={(e) => setAccentColor(e.target.value)}
-                        InputLabelProps={{ shrink: true }}
-                      />
-                      <TextField
-                        fullWidth
-                        label="Button Color"
-                        type="color"
-                        value={buttonColor}
-                        onChange={(e) => setButtonColor(e.target.value)}
-                        InputLabelProps={{ shrink: true }}
-                      />
-                      <TextField
-                        fullWidth
-                        label="Hover Color"
-                        type="color"
-                        value={hoverColor}
-                        onChange={(e) => setHoverColor(e.target.value)}
-                        InputLabelProps={{ shrink: true }}
-                      />
-                      <TextField
-                        fullWidth
-                        label="Base Color"
-                        type="color"
-                        value={baseColor}
-                        onChange={(e) => setBaseColor(e.target.value)}
-                        InputLabelProps={{ shrink: true }}
-                      />
-                    </Box>
-                    <Paper variant="outlined" className="color-settings-panel">
-                      <Typography variant="h6" className="color-settings-title">
-                        Current Settings
-                      </Typography>
-                      <Typography
-                        variant="subtitle2"
-                        className="color-settings-subtitle"
+                    <Box className="color-customization-inputs" mt={1} mb={2}>
+                      <FormControl>
+                        <InputLabel
+                          id="theme-select-label"
+                          sx={{
+                            top: "-4px",
+                            "&.Mui-focused": { top: 0 },
+                          }}
+                        >
+                          Select Color Theme
+                        </InputLabel>
+                        <Select
+                          labelId="theme-select-label"
+                          value={themeName}
+                          label="Select Color Theme"
+                          onChange={(e) => {
+                            const selectedThemeName = e.target.value;
+                            setThemeName(selectedThemeName);
+
+                            if (selectedThemeName === "custom") {
+                              setAccentColor("#131e27");
+                              setButtonColor("#ffc000");
+                              setHoverColor("#f8f9fa");
+                              setBaseColor("#ebf3f9");
+                            } else {
+                              const selectedTheme = themes.find(
+                                (theme) => theme.themeName === selectedThemeName
+                              );
+                              if (selectedTheme) {
+                                setAccentColor(
+                                  selectedTheme.accentColor || "#131e27"
+                                );
+                                setButtonColor(
+                                  selectedTheme.buttonColor || "#ffc000"
+                                );
+                                setHoverColor(
+                                  selectedTheme.hoverColor || "#f8f9fa"
+                                );
+                                setBaseColor(
+                                  selectedTheme.baseColor || "#ebf3f9"
+                                );
+                              }
+                            }
+                          }}
+                          sx={{
+                            borderRadius: 1,
+                            height: 45,
+                          }}
+                        >
+                          {themes.map((theme) => (
+                            <MenuItem key={theme._id} value={theme.themeName}>
+                              {theme.themeName}
+                            </MenuItem>
+                          ))}
+                          <MenuItem value="custom">Custom</MenuItem>
+                        </Select>
+                      </FormControl>
+
+      
+                      <Button
+                        variant="outlined"
+                        onClick={handleOpenDialog}
+                        className="createThemeBtn"
                       >
-                        Products Selected:
+                        <AddIcon sx={{ fontSize: "18px", mr: 0.5 }} /> Create
+                        new color theme
+                      </Button>
+                    </Box>
+
+                    <Dialog
+                      open={isOpen}
+                      onClose={() => setIsOpen(false)}
+                      PaperProps={{
+                       className:"dialogBox"
+                      }}
+                    >
+                      <Typography
+                        variant="h6"
+                        className="dialog-title"
+                      >
+                        Create new color theme
                       </Typography>
-                      <Box className="selected-products">
-                        {selectedProducts.length > 0 ? (
-                          selectedProducts.map((id) => {
-                            const product = products.find((p) => p.id === id);
-                            return (
-                              <Chip
-                                key={id}
-                                label={product?.name}
-                                size="small"
-                                color="primary"
-                                variant="filled"
-                                className="custom-chip"
-                              />
-                            );
-                          })
-                        ) : (
-                          <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            fontStyle="italic"
-                          >
-                            No products selected
-                          </Typography>
-                        )}
+
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        gap={2}
+                        sx={{ mb: 2 }}
+                      >
+                        <TextField
+                          fullWidth
+                          label="Theme Name"
+                          type="text"
+                          value={themeName}
+                          onChange={(e) => setThemeName(e.target.value)}
+                        />
+                        <Box className="color-customization-inputs">
+                          <TextField
+                          fullWidth
+                          label="Accent Color"
+                          type="color"
+                          value={newAccentColor}
+                          onChange={(e) => setNewAccentColor(e.target.value)}
+                          InputLabelProps={{ shrink: true }}
+                        />
+                        <TextField
+                          fullWidth
+                          label="Button Color"
+                          type="color"
+                          value={newButtonColor}
+                          onChange={(e) => setNewButtonColor(e.target.value)}
+                          InputLabelProps={{ shrink: true }}
+                        />
+                        <TextField
+                          fullWidth
+                          label="Hover Color"
+                          type="color"
+                          value={newHoverColor}
+                          onChange={(e) => setNewHoverColor(e.target.value)}
+                          InputLabelProps={{ shrink: true }}
+                        />
+                        <TextField
+                          fullWidth
+                          label="Base Color"
+                          type="color"
+                          value={newBaseColor}
+                          onChange={(e) => setNewBaseColor(e.target.value)}
+                          InputLabelProps={{ shrink: true }}
+                        />
+                        </Box>
                       </Box>
-                      <Grid container spacing={2}>
-                        <Grid item xs={6}>
-                          <Box className="color-preview">
-                            <Box
-                              className="color-circle"
-                              style={{ backgroundColor: accentColor }}
-                            />
-                            <Typography variant="subtitle2">
-                              Accent: {accentColor}
-                            </Typography>
-                          </Box>
-                        </Grid>
-                        <Grid item xs={6}>
-                          <Box className="color-preview">
-                            <Box
-                              className="color-circle"
-                              style={{ backgroundColor: buttonColor }}
-                            />
-                            <Typography variant="subtitle2">
-                              Button: {buttonColor}
-                            </Typography>
-                          </Box>
-                        </Grid>
-                        <Grid item xs={6}>
-                          <Box className="color-preview">
-                            <Box
-                              className="color-circle"
-                              style={{ backgroundColor: hoverColor }}
-                            />
-                            <Typography variant="subtitle2">
-                              Hover: {hoverColor}
-                            </Typography>
-                          </Box>
-                        </Grid>
-                        <Grid item xs={6}>
-                          <Box className="color-preview">
-                            <Box
-                              className="color-circle"
-                              style={{ backgroundColor: baseColor }}
-                            />
-                            <Typography variant="subtitle2">
-                              Base: {baseColor}
-                            </Typography>
-                          </Box>
-                        </Grid>
-                      </Grid>
-                    </Paper>
+
+                      <Box
+                        display="flex"
+                        justifyContent="space-between"
+                        gap={2}
+                      >
+                        <Button
+                          variant="outlined"
+                          color="error"
+                          fullWidth
+                          onClick={() => setIsOpen(false)}
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          variant="contained"
+                          fullWidth
+                          onClick={handleSaveTheme}
+                          sx={{
+                            backgroundColor: "#11233E",
+                            "&:hover": { backgroundColor: "#0a1a2f" },
+                          }}
+                        >
+                          Save
+                        </Button>
+                      </Box>
+                    </Dialog>
+
+                    {themeName === "custom" ? (
+                      <Box className="color-customization-inputs">
+                        <TextField
+                          fullWidth
+                          label="Accent Color"
+                          type="color"
+                          value={accentColor}
+                          onChange={(e) => setAccentColor(e.target.value)}
+                          InputLabelProps={{ shrink: true }}
+                        />
+                        <TextField
+                          fullWidth
+                          label="Button Color"
+                          type="color"
+                          value={buttonColor}
+                          onChange={(e) => setButtonColor(e.target.value)}
+                          InputLabelProps={{ shrink: true }}
+                        />
+                        <TextField
+                          fullWidth
+                          label="Hover Color"
+                          type="color"
+                          value={hoverColor}
+                          onChange={(e) => setHoverColor(e.target.value)}
+                          InputLabelProps={{ shrink: true }}
+                        />
+                        <TextField
+                          fullWidth
+                          label="Base Color"
+                          type="color"
+                          value={baseColor}
+                          onChange={(e) => setBaseColor(e.target.value)}
+                          InputLabelProps={{ shrink: true }}
+                        />
+                      </Box>
+                    ) : (
+                      <Paper
+                        variant="outlined"
+                        className="color-settings-panel"
+                      >
+                      <Box className="color-settings-header">
+  <Typography  gutterBottom>
+    {themes.find((t) => t.themeName === themeName)?.themeName || "No Theme Selected"}
+  </Typography>
+</Box>
+
+{(() => {
+  const selectedTheme = themes.find((t) => t.themeName === themeName);
+  if (!selectedTheme) return null;
+
+  return (
+    <Grid container spacing={2}>
+      <Grid item xs={6}>
+        <Box className="color-preview">
+          <Box
+            className="color-circle"
+            style={{ backgroundColor: selectedTheme.accentColor }}
+          />
+          <Typography variant="subtitle2">
+            Accent: {selectedTheme.accentColor}
+          </Typography>
+        </Box>
+      </Grid>
+
+      <Grid item xs={6}>
+        <Box className="color-preview">
+          <Box
+            className="color-circle"
+            style={{ backgroundColor: selectedTheme.buttonColor }}
+          />
+          <Typography variant="subtitle2">
+            Button: {selectedTheme.buttonColor}
+          </Typography>
+        </Box>
+      </Grid>
+
+      <Grid item xs={6}>
+        <Box className="color-preview">
+          <Box
+            className="color-circle"
+            style={{ backgroundColor: selectedTheme.hoverColor }}
+          />
+          <Typography variant="subtitle2">
+            Hover: {selectedTheme.hoverColor}
+          </Typography>
+        </Box>
+      </Grid>
+
+      <Grid item xs={6}>
+        <Box className="color-preview">
+          <Box
+            className="color-circle"
+            style={{ backgroundColor: selectedTheme.baseColor }}
+          />
+          <Typography variant="subtitle2">
+            Base: {selectedTheme.baseColor}
+          </Typography>
+        </Box>
+      </Grid>
+    </Grid>
+  );
+})()}
+
+                      </Paper>
+                    )}
                   </Grid>
                 </Paper>
               </Grid>
@@ -369,7 +592,7 @@ function Codegenerator() {
                               className="preview-iframe-wrapper"
                               sx={{ position: "relative" }}
                             >
-                              {loading && (
+                              {loadingg && (
                                 <Box className="loader-wrapper">
                                   <CircularProgress sx={{ color: "#11233E" }} />
                                   <Typography
@@ -387,9 +610,9 @@ function Codegenerator() {
                                 frameBorder="0"
                                 title="Embed Preview"
                                 className="preview-iframe"
-                                onLoad={() => setLoading(false)}
+                                onLoad={() => setLoadingg(false)}
                                 style={{
-                                  opacity: loading ? 0 : 1,
+                                  opacity: loadingg ? 0 : 1,
                                   transition: "opacity 0.3s ease",
                                 }}
                               />
@@ -402,7 +625,7 @@ function Codegenerator() {
                                 gutterBottom
                               >
                                 {selectedProducts &&
-                                  selectedProducts.length === 0
+                                selectedProducts.length === 0
                                   ? "Select at least one product to see preview"
                                   : "Loading preview..."}
                               </Typography>
@@ -424,12 +647,12 @@ function Codegenerator() {
             anchorOrigin={{ vertical: "top", horizontal: "center" }}
           >
             <Alert
-              className="customAlert "
+              className="customAlert"
               onClose={handleSnackbarClose}
-              severity="success"
+              severity={snackbarSeverity}
               sx={{ width: "100%" }}
             >
-              Embed code copied to clipboard!
+              {snackbarMessage}
             </Alert>
           </Snackbar>
         </Container>
