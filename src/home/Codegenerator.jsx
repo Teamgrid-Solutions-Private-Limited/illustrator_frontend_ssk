@@ -84,14 +84,37 @@ const { themes, loading, error, successMessage } = useSelector((state) => state.
   };
 
  const handleSaveTheme = async () => {
-  dispatch(createColorTheme({
+  try{
+      if (!themeName.trim()) {
+        setSnackbarMessage("Please enter theme name");
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+        return;
+      }
+
+     dispatch(createColorTheme({
     themeName,
     accentColor: newAccentColor,
     buttonColor: newButtonColor,
     hoverColor: newHoverColor,
     baseColor: newBaseColor,
   }));
-  setIsOpen(false);
+ 
+
+   setSnackbarMessage( "Theme created successfully");
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
+      setIsOpen(false);
+    } catch (error) {
+      setSnackbarMessage(
+         "Something went wrong"
+      );
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+      console.error("Error saving theme:", error);
+    }
+
+ 
 };
 
  useEffect(() => {
@@ -408,7 +431,7 @@ const { themes, loading, error, successMessage } = useSelector((state) => state.
                         className="color-settings-panel"
                       >
                       <Box className="color-settings-header">
-  <Typography variant="h6" gutterBottom>
+  <Typography  gutterBottom>
     {themes.find((t) => t.themeName === themeName)?.themeName || "No Theme Selected"}
   </Typography>
 </Box>
