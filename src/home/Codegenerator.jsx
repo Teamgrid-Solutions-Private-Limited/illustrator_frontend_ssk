@@ -24,6 +24,7 @@ import {
   FormControl,
   Dialog,
 } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import { ContentCopy } from "@mui/icons-material";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -74,6 +75,7 @@ function Codegenerator() {
   };
   const handleOpenDialog = () => {
     setIsOpen(true);
+    setThemeName('');
   };
 
   const handleSaveTheme = async () => {
@@ -204,89 +206,91 @@ function Codegenerator() {
 
                 <Paper className="config-custom-paper">
                   <Typography className="config-custom-typo">
-                    Set Color Theme
+                    Color Customization
                   </Typography>
 
                   <Grid item xs={12} className="color-customization-grid">
-                    <Button
-                      onClick={handleOpenDialog}
-                      variant="contained"
-                      sx={{
-                        width: "40%",
-                        mb: 2,
-                        backgroundColor: "#11233E",
-                        ml: "60%",
-                      }}
+                    <Box
+                     className="color-customization-inputs"
+                     mt={1}
+                     mb={2}
                     >
-                      Create Color Theme
-                    </Button>
-                    <Grid item xs={12} className="color-customization-grid">
-                      <Box
-                        className="color-customization-inputs"
-                        sx={{
-                          display: "flex",
-                          flexDirection: { xs: "column", sm: "row" },
-                          gap: 2,
-                          alignItems: "center",
-                          width: "100%",
-                        }}
+                      <FormControl
+                        
                       >
-                        <FormControl
-                          fullWidth
+                        <InputLabel
+                          id="theme-select-label"
                           sx={{
-                            minWidth: 180,
+                            top: "-4px",
+                            "&.Mui-focused": { top: 0 },
                           }}
                         >
-                          <InputLabel id="theme-select-label">Theme</InputLabel>
-                          <Select
-                            labelId="theme-select-label"
-                            value={themeName}
-                            label="Theme"
-                            onChange={(e) => {
-                              const selectedThemeName = e.target.value;
-                              setThemeName(selectedThemeName);
+                          Select Color Theme
+                        </InputLabel>
+                        <Select
+                          labelId="theme-select-label"
+                          value={themeName}
+                          label="Select Color Theme"
+                          onChange={(e) => {
+                            const selectedThemeName = e.target.value;
+                            setThemeName(selectedThemeName);
 
-                              if (selectedThemeName === "custom") {
-                                setAccentColor("#131e27");
-                                setButtonColor("#ffc000");
-                                setHoverColor("#f8f9fa");
-                                setBaseColor("#ebf3f9");
-                              } else {
-                                const selectedTheme = themes.find(
-                                  (theme) =>
-                                    theme.themeName === selectedThemeName
+                            if (selectedThemeName === "custom") {
+                              setAccentColor("#131e27");
+                              setButtonColor("#ffc000");
+                              setHoverColor("#f8f9fa");
+                              setBaseColor("#ebf3f9");
+                            } else {
+                              const selectedTheme = themes.find(
+                                (theme) => theme.themeName === selectedThemeName
+                              );
+                              if (selectedTheme) {
+                                setAccentColor(
+                                  selectedTheme.accentColor || "#131e27"
                                 );
-                                if (selectedTheme) {
-                                  setAccentColor(
-                                    selectedTheme.accentColor || "#131e27"
-                                  );
-                                  setButtonColor(
-                                    selectedTheme.buttonColor || "#ffc000"
-                                  );
-                                  setHoverColor(
-                                    selectedTheme.hoverColor || "#f8f9fa"
-                                  );
-                                  setBaseColor(
-                                    selectedTheme.baseColor || "#ebf3f9"
-                                  );
-                                }
+                                setButtonColor(
+                                  selectedTheme.buttonColor || "#ffc000"
+                                );
+                                setHoverColor(
+                                  selectedTheme.hoverColor || "#f8f9fa"
+                                );
+                                setBaseColor(
+                                  selectedTheme.baseColor || "#ebf3f9"
+                                );
                               }
-                            }}
-                            sx={{
-                              borderRadius: 1,
-                              height: 45,
-                            }}
-                          >
-                            {themes.map((theme) => (
-                              <MenuItem key={theme._id} value={theme.themeName}>
-                                {theme.themeName}
-                              </MenuItem>
-                            ))}
-                            <MenuItem value="custom">Custom</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Box>
-                    </Grid>
+                            }
+                          }}
+                          sx={{
+                            borderRadius: 1,
+                            height: 45,
+                          }}
+                        >
+                          {themes.map((theme) => (
+                            <MenuItem key={theme._id} value={theme.themeName}>
+                              {theme.themeName}
+                            </MenuItem>
+                          ))}
+                          <MenuItem value="custom">Custom</MenuItem>
+                        </Select>
+                      </FormControl>
+
+      
+                      <Typography
+                        onClick={handleOpenDialog}
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          fontSize: "16px",
+                          cursor: "pointer",
+                          color: "#11233E",
+                          "&:hover": { color:"#061429ff" },
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        <AddIcon sx={{ fontSize: "18px", mr: 0.5 }} /> Create
+                        new color theme
+                      </Typography>
+                    </Box>
 
                     <Dialog
                       open={isOpen}
