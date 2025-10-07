@@ -843,7 +843,7 @@ function Codegenerator() {
                         <Button
                           variant="contained"
                           fullWidth
-                          className="generate-btn"
+                          className="copy-btn"
                           startIcon={<ContentCopy />}
                           onClick={copyToClipboard}
                         >
