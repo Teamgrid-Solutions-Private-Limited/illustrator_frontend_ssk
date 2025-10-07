@@ -246,9 +246,8 @@ function Codegenerator() {
                           return (
                             <ListItem
                               key={product.id}
-                              className={`product-list-item ${
-                                selected ? "selected" : ""
-                              }`}
+                              className={`product-list-item ${selected ? "selected" : ""
+                                }`}
                               onClick={() => handleProductToggle(product.id)}
                             >
                               <ListItemText
@@ -340,6 +339,9 @@ function Codegenerator() {
                             borderRadius: 1,
                             height: 45,
                           }}
+                          MenuProps={{
+                            disableScrollLock: true,
+                          }}
                         >
                           {themes.map((theme) => (
                             <MenuItem key={theme._id} value={theme.themeName}>
@@ -359,7 +361,6 @@ function Codegenerator() {
                         new color theme
                       </Button>
                     </Box>
-
                     <Dialog
                       open={isOpen}
                       onClose={() => setIsOpen(false)}
@@ -843,7 +844,7 @@ function Codegenerator() {
                         <Button
                           variant="contained"
                           fullWidth
-                          className="generate-btn"
+                          className="copy-btn"
                           startIcon={<ContentCopy />}
                           onClick={copyToClipboard}
                         >
@@ -892,7 +893,7 @@ function Codegenerator() {
                                 gutterBottom
                               >
                                 {selectedProducts &&
-                                selectedProducts.length === 0
+                                  selectedProducts.length === 0
                                   ? "Select at least one product to see preview"
                                   : "Loading preview..."}
                               </Typography>
