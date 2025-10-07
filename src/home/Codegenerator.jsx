@@ -427,7 +427,7 @@ const handleCancelDialog = () => {
                       >
                         <Box className="color-settings-header">
                           <Typography gutterBottom>
-                            Selected color theme : {themes.find((t) => t.themeName === themeName)?.themeName || "No Theme Selected"}
+                            Selected Theme:{themes.find((t) => t.themeName === themeName)?.themeName || "No Theme Selected"}
                           </Typography>
                         </Box>
 
@@ -571,7 +571,7 @@ const handleCancelDialog = () => {
                         <Button
                           variant="contained"
                           fullWidth
-                          className="generate-btn"
+                          className="copy-btn"
                           startIcon={<ContentCopy />}
                           onClick={copyToClipboard}
                         >

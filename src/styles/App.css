@@ -284,6 +284,13 @@
   color: #666 !important;
 }
 
+.copy-btn {
+  padding: 10px 20px !important;
+  font-weight: 600;
+  font-size: 16px !important;
+  text-transform: none !important;
+  background: linear-gradient(320.1deg, #11233E 44.4%, #567BB0 97.6%);
+}
 .embed-container {
   margin-top: 16px;
   width: 100%;
