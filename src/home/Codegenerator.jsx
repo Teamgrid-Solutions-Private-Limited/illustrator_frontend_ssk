@@ -45,10 +45,18 @@ function Codegenerator() {
   const [buttonColor, setButtonColor] = useState("#ffc000");
   const [hoverColor, setHoverColor] = useState("#f8f9fa");
   const [baseColor, setBaseColor] = useState("#ebf3f9");
+  const [accentFontColor, setAccentFontColor] = useState("#ffffff");
+  const [buttonFontColor, setButtonFontColor] = useState("#000000");
+  const [hoverFontColor, setHoverFontColor] = useState("#000000");
+  const [baseFontColor, setBaseFontColor] = useState("#000000");
   const [newAccentColor, setNewAccentColor] = useState("#131e27");
   const [newButtonColor, setNewButtonColor] = useState("#ffc000");
   const [newHoverColor, setNewHoverColor] = useState("#f8f9fa");
   const [newBaseColor, setNewBaseColor] = useState("#ebf3f9");
+  const [newAccentFontColor, setNewAccentFontColor] = useState("#ffffff");
+  const [newButtonFontColor, setNewButtonFontColor] = useState("#000000");
+  const [newHoverFontColor, setNewHoverFontColor] = useState("#000000");
+  const [newBaseFontColor, setNewBaseFontColor] = useState("#000000");
 
   const [iframeUrl, setIframeUrl] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -58,10 +66,28 @@ function Codegenerator() {
   const [activeTab, setActiveTab] = useState("code");
   const [isOpen, setIsOpen] = useState(false);
   const [themeName, setThemeName] = useState("Life Innovator");
+  const [previousThemeName, setPreviousThemeName] = useState("Life Innovator"); 
+  const [iframeLoading, setIframeLoading] = useState(false); 
+  
   const dispatch = useDispatch();
   const { themes, loading, error, successMessage } = useSelector((state) => state.colorThemes);
-  const [loadingg, setLoadingg] = useState(loading);
-const [previousThemeName, setPreviousThemeName] = useState(themeName);
+
+
+  useEffect(() => {
+    if (successMessage) {
+      setSnackbarMessage(successMessage);
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
+      dispatch(clearMessages());
+    }
+    
+    if (error) {
+      setSnackbarMessage(error);
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+      dispatch(clearMessages());
+    }
+  }, [successMessage, error, dispatch]);
 
   const handleProductToggle = (productId) => {
     setSelectedProducts((prev) =>
@@ -78,41 +104,50 @@ const [previousThemeName, setPreviousThemeName] = useState(themeName);
       setSelectedProducts(products.map((p) => p.id));
     }
   };
+
   const handleOpenDialog = () => {
-     setPreviousThemeName(themeName);
+    setPreviousThemeName(themeName);
     setIsOpen(true);
     setThemeName("");
   };
-const handleCancelDialog = () => {
-  setIsOpen(false);
-  setThemeName(previousThemeName); // restore previous theme
-};
-  const handleSaveTheme = async () => {
-    try {
-      if (!themeName.trim()) {
-        setSnackbarMessage("Please enter theme name");
-        setSnackbarSeverity("error");
-        setSnackbarOpen(true);
-        return;
-      }
 
-      dispatch(createColorTheme({
-        themeName,
-        accentColor: newAccentColor,
-        buttonColor: newButtonColor,
-        hoverColor: newHoverColor,
-        baseColor: newBaseColor,
-      }));
-      setSnackbarMessage("Theme created successfully");
-      setSnackbarSeverity("success");
-      setSnackbarOpen(true);
-      setIsOpen(false);
-    } catch (error) {
-      setSnackbarMessage("Something went wrong");
+  const handleSaveTheme = async () => {
+  try {
+    if (!themeName.trim()) {
+      setSnackbarMessage("Please enter theme name");
       setSnackbarSeverity("error");
       setSnackbarOpen(true);
-      console.error("Error saving theme:", error);
+      return;
     }
+
+    const themeData = {
+      themeName,
+      accentColor: newAccentColor,
+      buttonColor: newButtonColor,
+      hoverColor: newHoverColor,
+      baseColor: newBaseColor,
+      accentFontColor: newAccentFontColor,
+      buttonFontColor: newButtonFontColor,
+      hoverFontColor: newHoverFontColor,
+      baseFontColor: newBaseFontColor,
+    };
+
+    console.log("Sending theme data:", themeData); 
+
+    dispatch(createColorTheme(themeData));
+
+    setIsOpen(false);
+  } catch (error) {
+    setSnackbarMessage("Something went wrong");
+    setSnackbarSeverity("error");
+    setSnackbarOpen(true);
+    console.error("Error saving theme:", error);
+  }
+};
+
+  const handleCancelDialog = () => {
+    setIsOpen(false);
+    setThemeName(previousThemeName); 
   };
 
   useEffect(() => {
@@ -140,7 +175,6 @@ const handleCancelDialog = () => {
       });
   };
 
-
   const handleSnackbarClose = (event, reason) => {
     if (reason === "clickaway") return;
     setSnackbarOpen(false);
@@ -154,11 +188,17 @@ const handleCancelDialog = () => {
       buttonColor.replace("#", "")
     )}&hoverColor=${encodeURIComponent(
       hoverColor.replace("#", "")
-    )}&baseColor=${encodeURIComponent(baseColor.replace("#", ""))}`;
+    )}&baseColor=${encodeURIComponent(baseColor.replace("#", "")
+    )}&accentFontColor=${encodeURIComponent(accentFontColor.replace("#", "")
+    )}&buttonFontColor=${encodeURIComponent(buttonFontColor.replace("#", "")
+    )}&hoverFontColor=${encodeURIComponent(hoverFontColor.replace("#", "")
+    )}&baseFontColor=${encodeURIComponent(baseFontColor.replace("#", "")
+    )}`;
+    
     if (url !== iframeUrl) {
       setIframeUrl(url);
       setShowEmbedCode(true);
-      setLoadingg(true);
+      setIframeLoading(true); 
     }
   };
 
@@ -273,9 +313,6 @@ const handleCancelDialog = () => {
                             borderRadius: 1,
                             height: 45,
                           }}
-                          MenuProps={{
-                            disableScrollLock: true,
-                          }}
                         >
                           {themes.map((theme) => (
                             <MenuItem key={theme._id} value={theme.themeName}>
@@ -285,6 +322,7 @@ const handleCancelDialog = () => {
                           <MenuItem value="custom">Custom</MenuItem>
                         </Select>
                       </FormControl>
+
                       <Button
                         variant="outlined"
                         onClick={handleOpenDialog}
@@ -294,13 +332,14 @@ const handleCancelDialog = () => {
                         new color theme
                       </Button>
                     </Box>
+
                     <Dialog
                       open={isOpen}
                       onClose={() => setIsOpen(false)}
                       PaperProps={{
                         className: "dialogBox"
                       }}
-                      disableScrollLock={true} 
+                      disableScrollLock={true}
                     >
                       <Typography
                         variant="h6"
@@ -322,6 +361,9 @@ const handleCancelDialog = () => {
                           value={themeName}
                           onChange={(e) => setThemeName(e.target.value)}
                         />
+                        <Typography variant="subtitle1" fontWeight="bold">
+                          Background Colors
+                        </Typography>
                         <Box className="color-customization-inputs">
                           <TextField
                             fullWidth
@@ -356,6 +398,43 @@ const handleCancelDialog = () => {
                             InputLabelProps={{ shrink: true }}
                           />
                         </Box>
+                        <Typography variant="subtitle1" fontWeight="bold">
+                          Font Colors
+                        </Typography>
+                        <Box className="color-customization-inputs">
+                          <TextField
+                            fullWidth
+                            label="Accent Font Color"
+                            type="color"
+                            value={newAccentFontColor}
+                            onChange={(e) => setNewAccentFontColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                          <TextField
+                            fullWidth
+                            label="Button Font Color"
+                            type="color"
+                            value={newButtonFontColor}
+                            onChange={(e) => setNewButtonFontColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                          <TextField
+                            fullWidth
+                            label="Hover Font Color"
+                            type="color"
+                            value={newHoverFontColor}
+                            onChange={(e) => setNewHoverFontColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                          <TextField
+                            fullWidth
+                            label="Base Font Color"
+                            type="color"
+                            value={newBaseFontColor}
+                            onChange={(e) => setNewBaseFontColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                        </Box>
                       </Box>
 
                       <Box
@@ -386,109 +465,214 @@ const handleCancelDialog = () => {
                     </Dialog>
 
                     {themeName === "custom" ? (
-                      <Box className="color-customization-inputs">
-                        <TextField
-                          fullWidth
-                          label="Accent Color"
-                          type="color"
-                          value={accentColor}
-                          onChange={(e) => setAccentColor(e.target.value)}
-                          InputLabelProps={{ shrink: true }}
-                        />
-                        <TextField
-                          fullWidth
-                          label="Button Color"
-                          type="color"
-                          value={buttonColor}
-                          onChange={(e) => setButtonColor(e.target.value)}
-                          InputLabelProps={{ shrink: true }}
-                        />
-                        <TextField
-                          fullWidth
-                          label="Hover Color"
-                          type="color"
-                          value={hoverColor}
-                          onChange={(e) => setHoverColor(e.target.value)}
-                          InputLabelProps={{ shrink: true }}
-                        />
-                        <TextField
-                          fullWidth
-                          label="Base Color"
-                          type="color"
-                          value={baseColor}
-                          onChange={(e) => setBaseColor(e.target.value)}
-                          InputLabelProps={{ shrink: true }}
-                        />
-                      </Box>
-                    ) : (
-                      <Paper
-                        variant="outlined"
-                        className="color-settings-panel"
-                      >
-                        <Box className="color-settings-header">
-                          <Typography gutterBottom>
-                            Selected color theme : {themes.find((t) => t.themeName === themeName)?.themeName || "No Theme Selected"}
-                          </Typography>
+                      <>
+                        <Typography variant="subtitle1" fontWeight="bold" sx={{ mt: 2 }}>
+                          Background Colors
+                        </Typography>
+                        <Box className="color-customization-inputs">
+                          <TextField
+                            fullWidth
+                            label="Accent Color"
+                            type="color"
+                            value={accentColor}
+                            onChange={(e) => setAccentColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                          <TextField
+                            fullWidth
+                            label="Button Color"
+                            type="color"
+                            value={buttonColor}
+                            onChange={(e) => setButtonColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                          <TextField
+                            fullWidth
+                            label="Hover Color"
+                            type="color"
+                            value={hoverColor}
+                            onChange={(e) => setHoverColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                          <TextField
+                            fullWidth
+                            label="Base Color"
+                            type="color"
+                            value={baseColor}
+                            onChange={(e) => setBaseColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
                         </Box>
+                        <Typography variant="subtitle1" fontWeight="bold" sx={{ mt: 2 }}>
+                          Font Colors
+                        </Typography>
+                        <Box className="color-customization-inputs">
+                          <TextField
+                            fullWidth
+                            label="Accent Font Color"
+                            type="color"
+                            value={accentFontColor}
+                            onChange={(e) => setAccentFontColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                          <TextField
+                            fullWidth
+                            label="Button Font Color"
+                            type="color"
+                            value={buttonFontColor}
+                            onChange={(e) => setButtonFontColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                          <TextField
+                            fullWidth
+                            label="Hover Font Color"
+                            type="color"
+                            value={hoverFontColor}
+                            onChange={(e) => setHoverFontColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                          <TextField
+                            fullWidth
+                            label="Base Font Color"
+                            type="color"
+                            value={baseFontColor}
+                            onChange={(e) => setBaseFontColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                        </Box>
+                      </>
+                    ) : (
+                      <>
+                        <Paper variant="outlined" className="color-settings-panel" sx={{ mt: 2 }}>
+                          <Box className="color-settings-header">
+                            <Typography gutterBottom variant="subtitle1" fontWeight="bold">
+                              Background Colors - {themes.find((t) => t.themeName === themeName)?.themeName || "No Theme Selected"}
+                            </Typography>
+                          </Box>
 
-                        {(() => {
-                          const selectedTheme = themes.find((t) => t.themeName === themeName);
-                          if (!selectedTheme) return null;
+                          {(() => {
+                            const selectedTheme = themes.find((t) => t.themeName === themeName);
+                            if (!selectedTheme) return null;
 
-                          return (
-                            <Grid container spacing={2}>
-                              <Grid item xs={6}>
-                                <Box className="color-preview">
-                                  <Box
-                                    className="color-circle"
-                                    style={{ backgroundColor: selectedTheme.accentColor }}
-                                  />
-                                  <Typography variant="subtitle2">
-                                    Accent: {selectedTheme.accentColor}
-                                  </Typography>
-                                </Box>
+                            return (
+                              <Grid container spacing={2}>
+                                <Grid item xs={6}>
+                                  <Box className="color-preview">
+                                    <Box
+                                      className="color-circle"
+                                      style={{ backgroundColor: selectedTheme.accentColor }}
+                                    />
+                                    <Typography variant="subtitle2">
+                                      Accent: {selectedTheme.accentColor}
+                                    </Typography>
+                                  </Box>
+                                </Grid>
+
+                                <Grid item xs={6}>
+                                  <Box className="color-preview">
+                                    <Box
+                                      className="color-circle"
+                                      style={{ backgroundColor: selectedTheme.buttonColor }}
+                                    />
+                                    <Typography variant="subtitle2">
+                                      Button: {selectedTheme.buttonColor}
+                                    </Typography>
+                                  </Box>
+                                </Grid>
+
+                                <Grid item xs={6}>
+                                  <Box className="color-preview">
+                                    <Box
+                                      className="color-circle"
+                                      style={{ backgroundColor: selectedTheme.hoverColor }}
+                                    />
+                                    <Typography variant="subtitle2">
+                                      Hover: {selectedTheme.hoverColor}
+                                    </Typography>
+                                  </Box>
+                                </Grid>
+
+                                <Grid item xs={6}>
+                                  <Box className="color-preview">
+                                    <Box
+                                      className="color-circle"
+                                      style={{ backgroundColor: selectedTheme.baseColor }}
+                                    />
+                                    <Typography variant="subtitle2">
+                                      Base: {selectedTheme.baseColor}
+                                    </Typography>
+                                  </Box>
+                                </Grid>
                               </Grid>
+                            );
+                          })()}
+                        </Paper>
 
-                              <Grid item xs={6}>
-                                <Box className="color-preview">
-                                  <Box
-                                    className="color-circle"
-                                    style={{ backgroundColor: selectedTheme.buttonColor }}
-                                  />
-                                  <Typography variant="subtitle2">
-                                    Button: {selectedTheme.buttonColor}
-                                  </Typography>
-                                </Box>
+                        <Paper variant="outlined" className="color-settings-panel" sx={{ mt: 2 }}>
+                          <Box className="color-settings-header">
+                            <Typography gutterBottom variant="subtitle1" fontWeight="bold">
+                              Font Colors - {themes.find((t) => t.themeName === themeName)?.themeName || "No Theme Selected"}
+                            </Typography>
+                          </Box>
+
+                          {(() => {
+                            const selectedTheme = themes.find((t) => t.themeName === themeName);
+                            if (!selectedTheme) return null;
+
+                            return (
+                              <Grid container spacing={2}>
+                                <Grid item xs={6}>
+                                  <Box className="color-preview">
+                                    <Box
+                                      className="color-circle"
+                                      style={{ backgroundColor: selectedTheme.accentFontColor }}
+                                    />
+                                    <Typography variant="subtitle2">
+                                      Accent: {selectedTheme.accentFontColor}
+                                    </Typography>
+                                  </Box>
+                                </Grid>
+
+                                <Grid item xs={6}>
+                                  <Box className="color-preview">
+                                    <Box
+                                      className="color-circle"
+                                      style={{ backgroundColor: selectedTheme.buttonFontColor }}
+                                    />
+                                    <Typography variant="subtitle2">
+                                      Button: {selectedTheme.buttonFontColor}
+                                    </Typography>
+                                  </Box>
+                                </Grid>
+
+                                <Grid item xs={6}>
+                                  <Box className="color-preview">
+                                    <Box
+                                      className="color-circle"
+                                      style={{ backgroundColor: selectedTheme.hoverFontColor }}
+                                    />
+                                    <Typography variant="subtitle2">
+                                      Hover: {selectedTheme.hoverFontColor}
+                                    </Typography>
+                                  </Box>
+                                </Grid>
+
+                                <Grid item xs={6}>
+                                  <Box className="color-preview">
+                                    <Box
+                                      className="color-circle"
+                                      style={{ backgroundColor: selectedTheme.baseFontColor }}
+                                    />
+                                    <Typography variant="subtitle2">
+                                      Base: {selectedTheme.baseFontColor}
+                                    </Typography>
+                                  </Box>
+                                </Grid>
                               </Grid>
-
-                              <Grid item xs={6}>
-                                <Box className="color-preview">
-                                  <Box
-                                    className="color-circle"
-                                    style={{ backgroundColor: selectedTheme.hoverColor }}
-                                  />
-                                  <Typography variant="subtitle2">
-                                    Hover: {selectedTheme.hoverColor}
-                                  </Typography>
-                                </Box>
-                              </Grid>
-
-                              <Grid item xs={6}>
-                                <Box className="color-preview">
-                                  <Box
-                                    className="color-circle"
-                                    style={{ backgroundColor: selectedTheme.baseColor }}
-                                  />
-                                  <Typography variant="subtitle2">
-                                    Base: {selectedTheme.baseColor}
-                                  </Typography>
-                                </Box>
-                              </Grid>
-                            </Grid>
-                          );
-                        })()}
-
-                      </Paper>
+                            );
+                          })()}
+                        </Paper>
+                      </>
                     )}
                   </Grid>
                 </Paper>
@@ -587,7 +771,7 @@ const handleCancelDialog = () => {
                               className="preview-iframe-wrapper"
                               sx={{ position: "relative" }}
                             >
-                              {loadingg && (
+                              {iframeLoading && (
                                 <Box className="loader-wrapper">
                                   <CircularProgress sx={{ color: "#11233E" }} />
                                   <Typography
@@ -605,9 +789,9 @@ const handleCancelDialog = () => {
                                 frameBorder="0"
                                 title="Embed Preview"
                                 className="preview-iframe"
-                                onLoad={() => setLoadingg(false)}
+                                onLoad={() => setIframeLoading(false)}
                                 style={{
-                                  opacity: loadingg ? 0 : 1,
+                                  opacity: iframeLoading ? 0 : 1,
                                   transition: "opacity 0.3s ease",
                                 }}
                               />
@@ -619,8 +803,7 @@ const handleCancelDialog = () => {
                                 color="text.secondary"
                                 gutterBottom
                               >
-                                {selectedProducts &&
-                                  selectedProducts.length === 0
+                                {selectedProducts && selectedProducts.length === 0
                                   ? "Select at least one product to see preview"
                                   : "Loading preview..."}
                               </Typography>
@@ -656,4 +839,5 @@ const handleCancelDialog = () => {
     </>
   );
 }
+
 export default Codegenerator;
