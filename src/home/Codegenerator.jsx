@@ -185,30 +185,32 @@ function Codegenerator() {
     setSnackbarOpen(false);
   };
 
-  const handleGenerateEmbedCode = () => {
-    const productIds = selectedProducts.join(",");
-    const url = `${EMBED_BASE_URL}/illustration/?product=${productIds}&accentColor=${encodeURIComponent(
-      accentColor.replace("#", "")
-    )}&buttonColor=${encodeURIComponent(
-      buttonColor.replace("#", "")
-    )}&hoverColor=${encodeURIComponent(
-      hoverColor.replace("#", "")
-    )}&baseColor=${encodeURIComponent(
-      baseColor.replace("#", "")
-    )}&accentFontColor=${encodeURIComponent(
-      accentFontColor.replace("#", "")
-    )}&buttonFontColor=${encodeURIComponent(
-      buttonFontColor.replace("#", "")
-    )}&hoverFontColor=${encodeURIComponent(
-      hoverFontColor.replace("#", "")
-    )}&baseFontColor=${encodeURIComponent(baseFontColor.replace("#", ""))}`;
-
-    if (url !== iframeUrl) {
-      setIframeUrl(url);
-      setShowEmbedCode(true);
-      setIframeLoading(true);
-    }
+const handleGenerateEmbedCode = () => {
+  const config = {
+    product: selectedProducts,
+    colors: {
+      accentColor,
+      buttonColor,
+      hoverColor,
+      baseColor,
+      accentFontColor,
+      buttonFontColor,
+      hoverFontColor,
+      baseFontColor,
+    },
   };
+
+  const encodedConfig = btoa(JSON.stringify(config));
+
+  const url = `${EMBED_BASE_URL}/illustration/${encodeURIComponent(encodedConfig)}`;
+
+  if (url !== iframeUrl) {
+    setIframeUrl(url);
+    setShowEmbedCode(true);
+    setIframeLoading(true);
+  }
+};
+
 
   return (
     <>
