@@ -45,10 +45,18 @@ function Codegenerator() {
   const [buttonColor, setButtonColor] = useState("#ffc000");
   const [hoverColor, setHoverColor] = useState("#f8f9fa");
   const [baseColor, setBaseColor] = useState("#ebf3f9");
+  const [accentFontColor, setAccentFontColor] = useState("#ffffff");
+  const [buttonFontColor, setButtonFontColor] = useState("#000000");
+  const [hoverFontColor, setHoverFontColor] = useState("#000000");
+  const [baseFontColor, setBaseFontColor] = useState("#000000");
   const [newAccentColor, setNewAccentColor] = useState("#131e27");
   const [newButtonColor, setNewButtonColor] = useState("#ffc000");
   const [newHoverColor, setNewHoverColor] = useState("#f8f9fa");
   const [newBaseColor, setNewBaseColor] = useState("#ebf3f9");
+  const [newAccentFontColor, setNewAccentFontColor] = useState("#ffffff");
+  const [newButtonFontColor, setNewButtonFontColor] = useState("#000000");
+  const [newHoverFontColor, setNewHoverFontColor] = useState("#000000");
+  const [newBaseFontColor, setNewBaseFontColor] = useState("#000000");
 
   const [iframeUrl, setIframeUrl] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -58,10 +66,28 @@ function Codegenerator() {
   const [activeTab, setActiveTab] = useState("code");
   const [isOpen, setIsOpen] = useState(false);
   const [themeName, setThemeName] = useState("Life Innovator");
-  // const [themes, setThemes] = useState([]);
-const dispatch = useDispatch();
-const { themes, loading, error, successMessage } = useSelector((state) => state.colorThemes);
-  const [loadingg, setLoadingg] = useState(loading);
+  const [previousThemeName, setPreviousThemeName] = useState("Life Innovator"); 
+  const [iframeLoading, setIframeLoading] = useState(false); 
+  
+  const dispatch = useDispatch();
+  const { themes, loading, error, successMessage } = useSelector((state) => state.colorThemes);
+
+
+  useEffect(() => {
+    if (successMessage) {
+      setSnackbarMessage(successMessage);
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
+      dispatch(clearMessages());
+    }
+    
+    if (error) {
+      setSnackbarMessage(error);
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+      dispatch(clearMessages());
+    }
+  }, [successMessage, error, dispatch]);
 
   const handleProductToggle = (productId) => {
     setSelectedProducts((prev) =>
@@ -78,73 +104,76 @@ const { themes, loading, error, successMessage } = useSelector((state) => state.
       setSelectedProducts(products.map((p) => p.id));
     }
   };
+
   const handleOpenDialog = () => {
+    setPreviousThemeName(themeName);
     setIsOpen(true);
     setThemeName("");
   };
 
- const handleSaveTheme = async () => {
-  try{
-      if (!themeName.trim()) {
-        setSnackbarMessage("Please enter theme name");
-        setSnackbarSeverity("error");
-        setSnackbarOpen(true);
-        return;
-      }
-
-     dispatch(createColorTheme({
-    themeName,
-    accentColor: newAccentColor,
-    buttonColor: newButtonColor,
-    hoverColor: newHoverColor,
-    baseColor: newBaseColor,
-  }));
- 
-
-   setSnackbarMessage( "Theme created successfully");
-      setSnackbarSeverity("success");
-      setSnackbarOpen(true);
-      setIsOpen(false);
-    } catch (error) {
-      setSnackbarMessage(
-         "Something went wrong"
-      );
+  const handleSaveTheme = async () => {
+  try {
+    if (!themeName.trim()) {
+      setSnackbarMessage("Please enter theme name");
       setSnackbarSeverity("error");
       setSnackbarOpen(true);
-      console.error("Error saving theme:", error);
+      return;
     }
 
- 
+    const themeData = {
+      themeName,
+      accentColor: newAccentColor,
+      buttonColor: newButtonColor,
+      hoverColor: newHoverColor,
+      baseColor: newBaseColor,
+      accentFontColor: newAccentFontColor,
+      buttonFontColor: newButtonFontColor,
+      hoverFontColor: newHoverFontColor,
+      baseFontColor: newBaseFontColor,
+    };
+
+    console.log("Sending theme data:", themeData); 
+
+    dispatch(createColorTheme(themeData));
+
+    setIsOpen(false);
+  } catch (error) {
+    setSnackbarMessage("Something went wrong");
+    setSnackbarSeverity("error");
+    setSnackbarOpen(true);
+    console.error("Error saving theme:", error);
+  }
 };
 
- useEffect(() => {
-  dispatch(fetchColorThemes());
-}, [dispatch]);
+  const handleCancelDialog = () => {
+    setIsOpen(false);
+    setThemeName(previousThemeName); 
+  };
 
-
-
+  useEffect(() => {
+    dispatch(fetchColorThemes());
+  }, [dispatch]);
 
   const generateEmbedCode = () => {
     return `<iframe id="crossDomainIframe" src="${iframeUrl}" width="100%" height="600" frameborder="0"></iframe>
     <script src="https://demos.godigitalalchemy.com/illustrata/embed/autoheight.js"></script>`;
   };
 
- const copyToClipboard = () => {
-  navigator.clipboard
-    .writeText(generateEmbedCode())
-    .then(() => {
-      setSnackbarMessage("Embed code copied to clipboard!");
-      setSnackbarSeverity("success");
-      setSnackbarOpen(true);
-    })
-    .catch((err) => {
-      setSnackbarMessage("Failed to copy embed code");
-      setSnackbarSeverity("error");
-      setSnackbarOpen(true);
-      console.error("Failed to copy: ", err);
-    });
-};
-
+  const copyToClipboard = () => {
+    navigator.clipboard
+      .writeText(generateEmbedCode())
+      .then(() => {
+        setSnackbarMessage("Embed code copied to clipboard!");
+        setSnackbarSeverity("success");
+        setSnackbarOpen(true);
+      })
+      .catch((err) => {
+        setSnackbarMessage("Failed to copy embed code");
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+        console.error("Failed to copy: ", err);
+      });
+  };
 
   const handleSnackbarClose = (event, reason) => {
     if (reason === "clickaway") return;
@@ -159,11 +188,17 @@ const { themes, loading, error, successMessage } = useSelector((state) => state.
       buttonColor.replace("#", "")
     )}&hoverColor=${encodeURIComponent(
       hoverColor.replace("#", "")
-    )}&baseColor=${encodeURIComponent(baseColor.replace("#", ""))}`;
+    )}&baseColor=${encodeURIComponent(baseColor.replace("#", "")
+    )}&accentFontColor=${encodeURIComponent(accentFontColor.replace("#", "")
+    )}&buttonFontColor=${encodeURIComponent(buttonFontColor.replace("#", "")
+    )}&hoverFontColor=${encodeURIComponent(hoverFontColor.replace("#", "")
+    )}&baseFontColor=${encodeURIComponent(baseFontColor.replace("#", "")
+    )}`;
+    
     if (url !== iframeUrl) {
       setIframeUrl(url);
       setShowEmbedCode(true);
-      setLoadingg(true);
+      setIframeLoading(true); 
     }
   };
 
@@ -203,9 +238,8 @@ const { themes, loading, error, successMessage } = useSelector((state) => state.
                           return (
                             <ListItem
                               key={product.id}
-                              className={`product-list-item ${
-                                selected ? "selected" : ""
-                              }`}
+                              className={`product-list-item ${selected ? "selected" : ""
+                                }`}
                               onClick={() => handleProductToggle(product.id)}
                             >
                               <ListItemText
@@ -289,7 +323,6 @@ const { themes, loading, error, successMessage } = useSelector((state) => state.
                         </Select>
                       </FormControl>
 
-      
                       <Button
                         variant="outlined"
                         onClick={handleOpenDialog}
@@ -304,8 +337,9 @@ const { themes, loading, error, successMessage } = useSelector((state) => state.
                       open={isOpen}
                       onClose={() => setIsOpen(false)}
                       PaperProps={{
-                       className:"dialogBox"
+                        className: "dialogBox"
                       }}
+                      disableScrollLock={true}
                     >
                       <Typography
                         variant="h6"
@@ -327,39 +361,79 @@ const { themes, loading, error, successMessage } = useSelector((state) => state.
                           value={themeName}
                           onChange={(e) => setThemeName(e.target.value)}
                         />
+                        <Typography variant="subtitle1" fontWeight="bold">
+                          Background Colors
+                        </Typography>
                         <Box className="color-customization-inputs">
                           <TextField
-                          fullWidth
-                          label="Accent Color"
-                          type="color"
-                          value={newAccentColor}
-                          onChange={(e) => setNewAccentColor(e.target.value)}
-                          InputLabelProps={{ shrink: true }}
-                        />
-                        <TextField
-                          fullWidth
-                          label="Button Color"
-                          type="color"
-                          value={newButtonColor}
-                          onChange={(e) => setNewButtonColor(e.target.value)}
-                          InputLabelProps={{ shrink: true }}
-                        />
-                        <TextField
-                          fullWidth
-                          label="Hover Color"
-                          type="color"
-                          value={newHoverColor}
-                          onChange={(e) => setNewHoverColor(e.target.value)}
-                          InputLabelProps={{ shrink: true }}
-                        />
-                        <TextField
-                          fullWidth
-                          label="Base Color"
-                          type="color"
-                          value={newBaseColor}
-                          onChange={(e) => setNewBaseColor(e.target.value)}
-                          InputLabelProps={{ shrink: true }}
-                        />
+                            fullWidth
+                            label="Accent Color"
+                            type="color"
+                            value={newAccentColor}
+                            onChange={(e) => setNewAccentColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                          <TextField
+                            fullWidth
+                            label="Button Color"
+                            type="color"
+                            value={newButtonColor}
+                            onChange={(e) => setNewButtonColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                          <TextField
+                            fullWidth
+                            label="Hover Color"
+                            type="color"
+                            value={newHoverColor}
+                            onChange={(e) => setNewHoverColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                          <TextField
+                            fullWidth
+                            label="Base Color"
+                            type="color"
+                            value={newBaseColor}
+                            onChange={(e) => setNewBaseColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                        </Box>
+                        <Typography variant="subtitle1" fontWeight="bold">
+                          Font Colors
+                        </Typography>
+                        <Box className="color-customization-inputs">
+                          <TextField
+                            fullWidth
+                            label="Accent Font Color"
+                            type="color"
+                            value={newAccentFontColor}
+                            onChange={(e) => setNewAccentFontColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                          <TextField
+                            fullWidth
+                            label="Button Font Color"
+                            type="color"
+                            value={newButtonFontColor}
+                            onChange={(e) => setNewButtonFontColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                          <TextField
+                            fullWidth
+                            label="Hover Font Color"
+                            type="color"
+                            value={newHoverFontColor}
+                            onChange={(e) => setNewHoverFontColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                          <TextField
+                            fullWidth
+                            label="Base Font Color"
+                            type="color"
+                            value={newBaseFontColor}
+                            onChange={(e) => setNewBaseFontColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
                         </Box>
                       </Box>
 
@@ -372,7 +446,7 @@ const { themes, loading, error, successMessage } = useSelector((state) => state.
                           variant="outlined"
                           color="error"
                           fullWidth
-                          onClick={() => setIsOpen(false)}
+                          onClick={handleCancelDialog}
                         >
                           Cancel
                         </Button>
@@ -391,109 +465,214 @@ const { themes, loading, error, successMessage } = useSelector((state) => state.
                     </Dialog>
 
                     {themeName === "custom" ? (
-                      <Box className="color-customization-inputs">
-                        <TextField
-                          fullWidth
-                          label="Accent Color"
-                          type="color"
-                          value={accentColor}
-                          onChange={(e) => setAccentColor(e.target.value)}
-                          InputLabelProps={{ shrink: true }}
-                        />
-                        <TextField
-                          fullWidth
-                          label="Button Color"
-                          type="color"
-                          value={buttonColor}
-                          onChange={(e) => setButtonColor(e.target.value)}
-                          InputLabelProps={{ shrink: true }}
-                        />
-                        <TextField
-                          fullWidth
-                          label="Hover Color"
-                          type="color"
-                          value={hoverColor}
-                          onChange={(e) => setHoverColor(e.target.value)}
-                          InputLabelProps={{ shrink: true }}
-                        />
-                        <TextField
-                          fullWidth
-                          label="Base Color"
-                          type="color"
-                          value={baseColor}
-                          onChange={(e) => setBaseColor(e.target.value)}
-                          InputLabelProps={{ shrink: true }}
-                        />
-                      </Box>
+                      <>
+                        <Typography variant="subtitle1" fontWeight="bold" sx={{ mt: 2 }}>
+                          Background Colors
+                        </Typography>
+                        <Box className="color-customization-inputs">
+                          <TextField
+                            fullWidth
+                            label="Accent Color"
+                            type="color"
+                            value={accentColor}
+                            onChange={(e) => setAccentColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                          <TextField
+                            fullWidth
+                            label="Button Color"
+                            type="color"
+                            value={buttonColor}
+                            onChange={(e) => setButtonColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                          <TextField
+                            fullWidth
+                            label="Hover Color"
+                            type="color"
+                            value={hoverColor}
+                            onChange={(e) => setHoverColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                          <TextField
+                            fullWidth
+                            label="Base Color"
+                            type="color"
+                            value={baseColor}
+                            onChange={(e) => setBaseColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                        </Box>
+                        <Typography variant="subtitle1" fontWeight="bold" sx={{ mt: 2 }}>
+                          Font Colors
+                        </Typography>
+                        <Box className="color-customization-inputs">
+                          <TextField
+                            fullWidth
+                            label="Accent Font Color"
+                            type="color"
+                            value={accentFontColor}
+                            onChange={(e) => setAccentFontColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                          <TextField
+                            fullWidth
+                            label="Button Font Color"
+                            type="color"
+                            value={buttonFontColor}
+                            onChange={(e) => setButtonFontColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                          <TextField
+                            fullWidth
+                            label="Hover Font Color"
+                            type="color"
+                            value={hoverFontColor}
+                            onChange={(e) => setHoverFontColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                          <TextField
+                            fullWidth
+                            label="Base Font Color"
+                            type="color"
+                            value={baseFontColor}
+                            onChange={(e) => setBaseFontColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                        </Box>
+                      </>
                     ) : (
-                      <Paper
-                        variant="outlined"
-                        className="color-settings-panel"
-                      >
-                      <Box className="color-settings-header">
-  <Typography  gutterBottom>
-    {themes.find((t) => t.themeName === themeName)?.themeName || "No Theme Selected"}
-  </Typography>
-</Box>
+                      <>
+                        <Paper variant="outlined" className="color-settings-panel" sx={{ mt: 2 }}>
+                          <Box className="color-settings-header">
+                            <Typography gutterBottom variant="subtitle1" fontWeight="bold">
+                              Background Colors - {themes.find((t) => t.themeName === themeName)?.themeName || "No Theme Selected"}
+                            </Typography>
+                          </Box>
 
-{(() => {
-  const selectedTheme = themes.find((t) => t.themeName === themeName);
-  if (!selectedTheme) return null;
+                          {(() => {
+                            const selectedTheme = themes.find((t) => t.themeName === themeName);
+                            if (!selectedTheme) return null;
 
-  return (
-    <Grid container spacing={2}>
-      <Grid item xs={6}>
-        <Box className="color-preview">
-          <Box
-            className="color-circle"
-            style={{ backgroundColor: selectedTheme.accentColor }}
-          />
-          <Typography variant="subtitle2">
-            Accent: {selectedTheme.accentColor}
-          </Typography>
-        </Box>
-      </Grid>
+                            return (
+                              <Grid container spacing={2}>
+                                <Grid item xs={6}>
+                                  <Box className="color-preview">
+                                    <Box
+                                      className="color-circle"
+                                      style={{ backgroundColor: selectedTheme.accentColor }}
+                                    />
+                                    <Typography variant="subtitle2">
+                                      Accent: {selectedTheme.accentColor}
+                                    </Typography>
+                                  </Box>
+                                </Grid>
 
-      <Grid item xs={6}>
-        <Box className="color-preview">
-          <Box
-            className="color-circle"
-            style={{ backgroundColor: selectedTheme.buttonColor }}
-          />
-          <Typography variant="subtitle2">
-            Button: {selectedTheme.buttonColor}
-          </Typography>
-        </Box>
-      </Grid>
+                                <Grid item xs={6}>
+                                  <Box className="color-preview">
+                                    <Box
+                                      className="color-circle"
+                                      style={{ backgroundColor: selectedTheme.buttonColor }}
+                                    />
+                                    <Typography variant="subtitle2">
+                                      Button: {selectedTheme.buttonColor}
+                                    </Typography>
+                                  </Box>
+                                </Grid>
 
-      <Grid item xs={6}>
-        <Box className="color-preview">
-          <Box
-            className="color-circle"
-            style={{ backgroundColor: selectedTheme.hoverColor }}
-          />
-          <Typography variant="subtitle2">
-            Hover: {selectedTheme.hoverColor}
-          </Typography>
-        </Box>
-      </Grid>
+                                <Grid item xs={6}>
+                                  <Box className="color-preview">
+                                    <Box
+                                      className="color-circle"
+                                      style={{ backgroundColor: selectedTheme.hoverColor }}
+                                    />
+                                    <Typography variant="subtitle2">
+                                      Hover: {selectedTheme.hoverColor}
+                                    </Typography>
+                                  </Box>
+                                </Grid>
 
-      <Grid item xs={6}>
-        <Box className="color-preview">
-          <Box
-            className="color-circle"
-            style={{ backgroundColor: selectedTheme.baseColor }}
-          />
-          <Typography variant="subtitle2">
-            Base: {selectedTheme.baseColor}
-          </Typography>
-        </Box>
-      </Grid>
-    </Grid>
-  );
-})()}
+                                <Grid item xs={6}>
+                                  <Box className="color-preview">
+                                    <Box
+                                      className="color-circle"
+                                      style={{ backgroundColor: selectedTheme.baseColor }}
+                                    />
+                                    <Typography variant="subtitle2">
+                                      Base: {selectedTheme.baseColor}
+                                    </Typography>
+                                  </Box>
+                                </Grid>
+                              </Grid>
+                            );
+                          })()}
+                        </Paper>
 
-                      </Paper>
+                        <Paper variant="outlined" className="color-settings-panel" sx={{ mt: 2 }}>
+                          <Box className="color-settings-header">
+                            <Typography gutterBottom variant="subtitle1" fontWeight="bold">
+                              Font Colors - {themes.find((t) => t.themeName === themeName)?.themeName || "No Theme Selected"}
+                            </Typography>
+                          </Box>
+
+                          {(() => {
+                            const selectedTheme = themes.find((t) => t.themeName === themeName);
+                            if (!selectedTheme) return null;
+
+                            return (
+                              <Grid container spacing={2}>
+                                <Grid item xs={6}>
+                                  <Box className="color-preview">
+                                    <Box
+                                      className="color-circle"
+                                      style={{ backgroundColor: selectedTheme.accentFontColor }}
+                                    />
+                                    <Typography variant="subtitle2">
+                                      Accent: {selectedTheme.accentFontColor}
+                                    </Typography>
+                                  </Box>
+                                </Grid>
+
+                                <Grid item xs={6}>
+                                  <Box className="color-preview">
+                                    <Box
+                                      className="color-circle"
+                                      style={{ backgroundColor: selectedTheme.buttonFontColor }}
+                                    />
+                                    <Typography variant="subtitle2">
+                                      Button: {selectedTheme.buttonFontColor}
+                                    </Typography>
+                                  </Box>
+                                </Grid>
+
+                                <Grid item xs={6}>
+                                  <Box className="color-preview">
+                                    <Box
+                                      className="color-circle"
+                                      style={{ backgroundColor: selectedTheme.hoverFontColor }}
+                                    />
+                                    <Typography variant="subtitle2">
+                                      Hover: {selectedTheme.hoverFontColor}
+                                    </Typography>
+                                  </Box>
+                                </Grid>
+
+                                <Grid item xs={6}>
+                                  <Box className="color-preview">
+                                    <Box
+                                      className="color-circle"
+                                      style={{ backgroundColor: selectedTheme.baseFontColor }}
+                                    />
+                                    <Typography variant="subtitle2">
+                                      Base: {selectedTheme.baseFontColor}
+                                    </Typography>
+                                  </Box>
+                                </Grid>
+                              </Grid>
+                            );
+                          })()}
+                        </Paper>
+                      </>
                     )}
                   </Grid>
                 </Paper>
@@ -592,7 +771,7 @@ const { themes, loading, error, successMessage } = useSelector((state) => state.
                               className="preview-iframe-wrapper"
                               sx={{ position: "relative" }}
                             >
-                              {loadingg && (
+                              {iframeLoading && (
                                 <Box className="loader-wrapper">
                                   <CircularProgress sx={{ color: "#11233E" }} />
                                   <Typography
@@ -610,9 +789,9 @@ const { themes, loading, error, successMessage } = useSelector((state) => state.
                                 frameBorder="0"
                                 title="Embed Preview"
                                 className="preview-iframe"
-                                onLoad={() => setLoadingg(false)}
+                                onLoad={() => setIframeLoading(false)}
                                 style={{
-                                  opacity: loadingg ? 0 : 1,
+                                  opacity: iframeLoading ? 0 : 1,
                                   transition: "opacity 0.3s ease",
                                 }}
                               />
@@ -624,8 +803,7 @@ const { themes, loading, error, successMessage } = useSelector((state) => state.
                                 color="text.secondary"
                                 gutterBottom
                               >
-                                {selectedProducts &&
-                                selectedProducts.length === 0
+                                {selectedProducts && selectedProducts.length === 0
                                   ? "Select at least one product to see preview"
                                   : "Loading preview..."}
                               </Typography>
@@ -661,4 +839,5 @@ const { themes, loading, error, successMessage } = useSelector((state) => state.
     </>
   );
 }
+
 export default Codegenerator;
