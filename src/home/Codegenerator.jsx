@@ -61,7 +61,8 @@ function Codegenerator() {
   const dispatch = useDispatch();
   const { themes, loading, error, successMessage } = useSelector((state) => state.colorThemes);
   const [loadingg, setLoadingg] = useState(loading);
-  
+const [previousThemeName, setPreviousThemeName] = useState(themeName);
+
   const handleProductToggle = (productId) => {
     setSelectedProducts((prev) =>
       prev.includes(productId)
@@ -78,10 +79,14 @@ function Codegenerator() {
     }
   };
   const handleOpenDialog = () => {
+     setPreviousThemeName(themeName);
     setIsOpen(true);
     setThemeName("");
   };
-
+const handleCancelDialog = () => {
+  setIsOpen(false);
+  setThemeName(previousThemeName); // restore previous theme
+};
   const handleSaveTheme = async () => {
     try {
       if (!themeName.trim()) {
@@ -98,8 +103,6 @@ function Codegenerator() {
         hoverColor: newHoverColor,
         baseColor: newBaseColor,
       }));
-
-
       setSnackbarMessage("Theme created successfully");
       setSnackbarSeverity("success");
       setSnackbarOpen(true);
@@ -270,6 +273,9 @@ function Codegenerator() {
                             borderRadius: 1,
                             height: 45,
                           }}
+                          MenuProps={{
+                            disableScrollLock: true,
+                          }}
                         >
                           {themes.map((theme) => (
                             <MenuItem key={theme._id} value={theme.themeName}>
@@ -279,8 +285,6 @@ function Codegenerator() {
                           <MenuItem value="custom">Custom</MenuItem>
                         </Select>
                       </FormControl>
-
-
                       <Button
                         variant="outlined"
                         onClick={handleOpenDialog}
@@ -290,13 +294,13 @@ function Codegenerator() {
                         new color theme
                       </Button>
                     </Box>
-
                     <Dialog
                       open={isOpen}
                       onClose={() => setIsOpen(false)}
                       PaperProps={{
                         className: "dialogBox"
                       }}
+                      disableScrollLock={true} 
                     >
                       <Typography
                         variant="h6"
@@ -363,7 +367,7 @@ function Codegenerator() {
                           variant="outlined"
                           color="error"
                           fullWidth
-                          onClick={() => setIsOpen(false)}
+                          onClick={handleCancelDialog}
                         >
                           Cancel
                         </Button>
@@ -423,7 +427,7 @@ function Codegenerator() {
                       >
                         <Box className="color-settings-header">
                           <Typography gutterBottom>
-                            {themes.find((t) => t.themeName === themeName)?.themeName || "No Theme Selected"}
+                            Selected color theme : {themes.find((t) => t.themeName === themeName)?.themeName || "No Theme Selected"}
                           </Typography>
                         </Box>
 
