@@ -30,7 +30,11 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { EMBED_BASE_URL } from "../constants/constants";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchColorThemes, createColorTheme, clearMessages } from "../redux/reducer/colorThemeSlice";
+import {
+  fetchColorThemes,
+  createColorTheme,
+  clearMessages,
+} from "../redux/reducer/colorThemeSlice";
 
 const products = [
   { id: 1103, name: "Demo, A Multi-Year Guaranteed Annuity" },
@@ -66,12 +70,13 @@ function Codegenerator() {
   const [activeTab, setActiveTab] = useState("code");
   const [isOpen, setIsOpen] = useState(false);
   const [themeName, setThemeName] = useState("Life Innovator");
-  const [previousThemeName, setPreviousThemeName] = useState("Life Innovator"); 
-  const [iframeLoading, setIframeLoading] = useState(false); 
-  
-  const dispatch = useDispatch();
-  const { themes, loading, error, successMessage } = useSelector((state) => state.colorThemes);
+  const [previousThemeName, setPreviousThemeName] = useState("Life Innovator");
+  const [iframeLoading, setIframeLoading] = useState(false);
 
+  const dispatch = useDispatch();
+  const { themes, loading, error, successMessage } = useSelector(
+    (state) => state.colorThemes
+  );
 
   useEffect(() => {
     if (successMessage) {
@@ -80,7 +85,7 @@ function Codegenerator() {
       setSnackbarOpen(true);
       dispatch(clearMessages());
     }
-    
+
     if (error) {
       setSnackbarMessage(error);
       setSnackbarSeverity("error");
@@ -112,42 +117,42 @@ function Codegenerator() {
   };
 
   const handleSaveTheme = async () => {
-  try {
-    if (!themeName.trim()) {
-      setSnackbarMessage("Please enter theme name");
+    try {
+      if (!themeName.trim()) {
+        setSnackbarMessage("Please enter theme name");
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+        return;
+      }
+
+      const themeData = {
+        themeName,
+        accentColor: newAccentColor,
+        buttonColor: newButtonColor,
+        hoverColor: newHoverColor,
+        baseColor: newBaseColor,
+        accentFontColor: newAccentFontColor,
+        buttonFontColor: newButtonFontColor,
+        hoverFontColor: newHoverFontColor,
+        baseFontColor: newBaseFontColor,
+      };
+
+      console.log("Sending theme data:", themeData);
+
+      dispatch(createColorTheme(themeData));
+
+      setIsOpen(false);
+    } catch (error) {
+      setSnackbarMessage("Something went wrong");
       setSnackbarSeverity("error");
       setSnackbarOpen(true);
-      return;
+      console.error("Error saving theme:", error);
     }
-
-    const themeData = {
-      themeName,
-      accentColor: newAccentColor,
-      buttonColor: newButtonColor,
-      hoverColor: newHoverColor,
-      baseColor: newBaseColor,
-      accentFontColor: newAccentFontColor,
-      buttonFontColor: newButtonFontColor,
-      hoverFontColor: newHoverFontColor,
-      baseFontColor: newBaseFontColor,
-    };
-
-    console.log("Sending theme data:", themeData); 
-
-    dispatch(createColorTheme(themeData));
-
-    setIsOpen(false);
-  } catch (error) {
-    setSnackbarMessage("Something went wrong");
-    setSnackbarSeverity("error");
-    setSnackbarOpen(true);
-    console.error("Error saving theme:", error);
-  }
-};
+  };
 
   const handleCancelDialog = () => {
     setIsOpen(false);
-    setThemeName(previousThemeName); 
+    setThemeName(previousThemeName);
   };
 
   useEffect(() => {
@@ -188,17 +193,20 @@ function Codegenerator() {
       buttonColor.replace("#", "")
     )}&hoverColor=${encodeURIComponent(
       hoverColor.replace("#", "")
-    )}&baseColor=${encodeURIComponent(baseColor.replace("#", "")
-    )}&accentFontColor=${encodeURIComponent(accentFontColor.replace("#", "")
-    )}&buttonFontColor=${encodeURIComponent(buttonFontColor.replace("#", "")
-    )}&hoverFontColor=${encodeURIComponent(hoverFontColor.replace("#", "")
-    )}&baseFontColor=${encodeURIComponent(baseFontColor.replace("#", "")
-    )}`;
-    
+    )}&baseColor=${encodeURIComponent(
+      baseColor.replace("#", "")
+    )}&accentFontColor=${encodeURIComponent(
+      accentFontColor.replace("#", "")
+    )}&buttonFontColor=${encodeURIComponent(
+      buttonFontColor.replace("#", "")
+    )}&hoverFontColor=${encodeURIComponent(
+      hoverFontColor.replace("#", "")
+    )}&baseFontColor=${encodeURIComponent(baseFontColor.replace("#", ""))}`;
+
     if (url !== iframeUrl) {
       setIframeUrl(url);
       setShowEmbedCode(true);
-      setIframeLoading(true); 
+      setIframeLoading(true);
     }
   };
 
@@ -238,8 +246,9 @@ function Codegenerator() {
                           return (
                             <ListItem
                               key={product.id}
-                              className={`product-list-item ${selected ? "selected" : ""
-                                }`}
+                              className={`product-list-item ${
+                                selected ? "selected" : ""
+                              }`}
                               onClick={() => handleProductToggle(product.id)}
                             >
                               <ListItemText
@@ -289,11 +298,16 @@ function Codegenerator() {
                               setButtonColor("#ffc000");
                               setHoverColor("#f8f9fa");
                               setBaseColor("#ebf3f9");
+                              setAccentFontColor("#ffffff");
+                              setButtonFontColor("#000000");
+                              setHoverFontColor("#000000");
+                              setBaseFontColor("#000000");
                             } else {
                               const selectedTheme = themes.find(
                                 (theme) => theme.themeName === selectedThemeName
                               );
                               if (selectedTheme) {
+                            
                                 setAccentColor(
                                   selectedTheme.accentColor || "#131e27"
                                 );
@@ -305,6 +319,19 @@ function Codegenerator() {
                                 );
                                 setBaseColor(
                                   selectedTheme.baseColor || "#ebf3f9"
+                                );
+                              
+                                setAccentFontColor(
+                                  selectedTheme.accentFontColor || "#ffffff"
+                                );
+                                setButtonFontColor(
+                                  selectedTheme.buttonFontColor || "#000000"
+                                );
+                                setHoverFontColor(
+                                  selectedTheme.hoverFontColor || "#000000"
+                                );
+                                setBaseFontColor(
+                                  selectedTheme.baseFontColor || "#000000"
                                 );
                               }
                             }
@@ -337,14 +364,11 @@ function Codegenerator() {
                       open={isOpen}
                       onClose={() => setIsOpen(false)}
                       PaperProps={{
-                        className: "dialogBox"
+                        className: "dialogBox",
                       }}
                       disableScrollLock={true}
                     >
-                      <Typography
-                        variant="h6"
-                        className="dialog-title"
-                      >
+                      <Typography variant="h6" className="dialog-title">
                         Create new color theme
                       </Typography>
 
@@ -407,7 +431,9 @@ function Codegenerator() {
                             label="Accent Font Color"
                             type="color"
                             value={newAccentFontColor}
-                            onChange={(e) => setNewAccentFontColor(e.target.value)}
+                            onChange={(e) =>
+                              setNewAccentFontColor(e.target.value)
+                            }
                             InputLabelProps={{ shrink: true }}
                           />
                           <TextField
@@ -415,7 +441,9 @@ function Codegenerator() {
                             label="Button Font Color"
                             type="color"
                             value={newButtonFontColor}
-                            onChange={(e) => setNewButtonFontColor(e.target.value)}
+                            onChange={(e) =>
+                              setNewButtonFontColor(e.target.value)
+                            }
                             InputLabelProps={{ shrink: true }}
                           />
                           <TextField
@@ -423,7 +451,9 @@ function Codegenerator() {
                             label="Hover Font Color"
                             type="color"
                             value={newHoverFontColor}
-                            onChange={(e) => setNewHoverFontColor(e.target.value)}
+                            onChange={(e) =>
+                              setNewHoverFontColor(e.target.value)
+                            }
                             InputLabelProps={{ shrink: true }}
                           />
                           <TextField
@@ -431,7 +461,9 @@ function Codegenerator() {
                             label="Base Font Color"
                             type="color"
                             value={newBaseFontColor}
-                            onChange={(e) => setNewBaseFontColor(e.target.value)}
+                            onChange={(e) =>
+                              setNewBaseFontColor(e.target.value)
+                            }
                             InputLabelProps={{ shrink: true }}
                           />
                         </Box>
@@ -466,7 +498,11 @@ function Codegenerator() {
 
                     {themeName === "custom" ? (
                       <>
-                        <Typography variant="subtitle1" fontWeight="bold" sx={{ mt: 2 }}>
+                        <Typography
+                          variant="subtitle1"
+                          fontWeight="bold"
+                          sx={{ mt: 2 }}
+                        >
                           Background Colors
                         </Typography>
                         <Box className="color-customization-inputs">
@@ -503,7 +539,11 @@ function Codegenerator() {
                             InputLabelProps={{ shrink: true }}
                           />
                         </Box>
-                        <Typography variant="subtitle1" fontWeight="bold" sx={{ mt: 2 }}>
+                        <Typography
+                          variant="subtitle1"
+                          fontWeight="bold"
+                          sx={{ mt: 2 }}
+                        >
                           Font Colors
                         </Typography>
                         <Box className="color-customization-inputs">
@@ -543,15 +583,27 @@ function Codegenerator() {
                       </>
                     ) : (
                       <>
-                        <Paper variant="outlined" className="color-settings-panel" sx={{ mt: 2 }}>
+                        <Paper
+                          variant="outlined"
+                          className="color-settings-panel"
+                          sx={{ mt: 2 }}
+                        >
                           <Box className="color-settings-header">
-                            <Typography gutterBottom variant="subtitle1" fontWeight="bold">
-                              Background Colors - {themes.find((t) => t.themeName === themeName)?.themeName || "No Theme Selected"}
+                            <Typography
+                              gutterBottom
+                              variant="subtitle1"
+                              fontWeight="bold"
+                            >
+                              Background Colors -{" "}
+                              {themes.find((t) => t.themeName === themeName)
+                                ?.themeName || "No Theme Selected"}
                             </Typography>
                           </Box>
 
                           {(() => {
-                            const selectedTheme = themes.find((t) => t.themeName === themeName);
+                            const selectedTheme = themes.find(
+                              (t) => t.themeName === themeName
+                            );
                             if (!selectedTheme) return null;
 
                             return (
@@ -560,7 +612,10 @@ function Codegenerator() {
                                   <Box className="color-preview">
                                     <Box
                                       className="color-circle"
-                                      style={{ backgroundColor: selectedTheme.accentColor }}
+                                      style={{
+                                        backgroundColor:
+                                          selectedTheme.accentColor,
+                                      }}
                                     />
                                     <Typography variant="subtitle2">
                                       Accent: {selectedTheme.accentColor}
@@ -572,7 +627,10 @@ function Codegenerator() {
                                   <Box className="color-preview">
                                     <Box
                                       className="color-circle"
-                                      style={{ backgroundColor: selectedTheme.buttonColor }}
+                                      style={{
+                                        backgroundColor:
+                                          selectedTheme.buttonColor,
+                                      }}
                                     />
                                     <Typography variant="subtitle2">
                                       Button: {selectedTheme.buttonColor}
@@ -584,7 +642,10 @@ function Codegenerator() {
                                   <Box className="color-preview">
                                     <Box
                                       className="color-circle"
-                                      style={{ backgroundColor: selectedTheme.hoverColor }}
+                                      style={{
+                                        backgroundColor:
+                                          selectedTheme.hoverColor,
+                                      }}
                                     />
                                     <Typography variant="subtitle2">
                                       Hover: {selectedTheme.hoverColor}
@@ -596,7 +657,10 @@ function Codegenerator() {
                                   <Box className="color-preview">
                                     <Box
                                       className="color-circle"
-                                      style={{ backgroundColor: selectedTheme.baseColor }}
+                                      style={{
+                                        backgroundColor:
+                                          selectedTheme.baseColor,
+                                      }}
                                     />
                                     <Typography variant="subtitle2">
                                       Base: {selectedTheme.baseColor}
@@ -608,15 +672,27 @@ function Codegenerator() {
                           })()}
                         </Paper>
 
-                        <Paper variant="outlined" className="color-settings-panel" sx={{ mt: 2 }}>
+                        <Paper
+                          variant="outlined"
+                          className="color-settings-panel"
+                          sx={{ mt: 2 }}
+                        >
                           <Box className="color-settings-header">
-                            <Typography gutterBottom variant="subtitle1" fontWeight="bold">
-                              Font Colors - {themes.find((t) => t.themeName === themeName)?.themeName || "No Theme Selected"}
+                            <Typography
+                              gutterBottom
+                              variant="subtitle1"
+                              fontWeight="bold"
+                            >
+                              Font Colors -{" "}
+                              {themes.find((t) => t.themeName === themeName)
+                                ?.themeName || "No Theme Selected"}
                             </Typography>
                           </Box>
 
                           {(() => {
-                            const selectedTheme = themes.find((t) => t.themeName === themeName);
+                            const selectedTheme = themes.find(
+                              (t) => t.themeName === themeName
+                            );
                             if (!selectedTheme) return null;
 
                             return (
@@ -625,7 +701,10 @@ function Codegenerator() {
                                   <Box className="color-preview">
                                     <Box
                                       className="color-circle"
-                                      style={{ backgroundColor: selectedTheme.accentFontColor }}
+                                      style={{
+                                        backgroundColor:
+                                          selectedTheme.accentFontColor,
+                                      }}
                                     />
                                     <Typography variant="subtitle2">
                                       Accent: {selectedTheme.accentFontColor}
@@ -637,7 +716,10 @@ function Codegenerator() {
                                   <Box className="color-preview">
                                     <Box
                                       className="color-circle"
-                                      style={{ backgroundColor: selectedTheme.buttonFontColor }}
+                                      style={{
+                                        backgroundColor:
+                                          selectedTheme.buttonFontColor,
+                                      }}
                                     />
                                     <Typography variant="subtitle2">
                                       Button: {selectedTheme.buttonFontColor}
@@ -649,7 +731,10 @@ function Codegenerator() {
                                   <Box className="color-preview">
                                     <Box
                                       className="color-circle"
-                                      style={{ backgroundColor: selectedTheme.hoverFontColor }}
+                                      style={{
+                                        backgroundColor:
+                                          selectedTheme.hoverFontColor,
+                                      }}
                                     />
                                     <Typography variant="subtitle2">
                                       Hover: {selectedTheme.hoverFontColor}
@@ -661,7 +746,10 @@ function Codegenerator() {
                                   <Box className="color-preview">
                                     <Box
                                       className="color-circle"
-                                      style={{ backgroundColor: selectedTheme.baseFontColor }}
+                                      style={{
+                                        backgroundColor:
+                                          selectedTheme.baseFontColor,
+                                      }}
                                     />
                                     <Typography variant="subtitle2">
                                       Base: {selectedTheme.baseFontColor}
@@ -803,7 +891,8 @@ function Codegenerator() {
                                 color="text.secondary"
                                 gutterBottom
                               >
-                                {selectedProducts && selectedProducts.length === 0
+                                {selectedProducts &&
+                                selectedProducts.length === 0
                                   ? "Select at least one product to see preview"
                                   : "Loading preview..."}
                               </Typography>
