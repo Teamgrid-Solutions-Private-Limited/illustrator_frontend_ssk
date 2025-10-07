@@ -115,44 +115,48 @@ function Codegenerator() {
     setIsOpen(true);
     setThemeName("");
   };
-  // const handleCancelDialog = () => {
-  //   setIsOpen(false);
-  //   setThemeName(previousThemeName);
-  // };
-  const handleSaveTheme = async () => {
-    try {
-      if (!themeName.trim()) {
-        setSnackbarMessage("Please enter theme name");
-        setSnackbarSeverity("error");
-        setSnackbarOpen(true);
-        return;
-      }
-
-      const themeData = {
-        themeName,
-        accentColor: newAccentColor,
-        buttonColor: newButtonColor,
-        hoverColor: newHoverColor,
-        baseColor: newBaseColor,
-        accentFontColor: newAccentFontColor,
-        buttonFontColor: newButtonFontColor,
-        hoverFontColor: newHoverFontColor,
-        baseFontColor: newBaseFontColor,
-      };
-
-      console.log("Sending theme data:", themeData);
-
-      dispatch(createColorTheme(themeData));
-
-      setIsOpen(false);
-    } catch (error) {
-      setSnackbarMessage("Something went wrong");
+ 
+const handleSaveTheme = async () => {
+  try {
+    if (!themeName.trim()) {
+      setSnackbarMessage("Please enter theme name");
       setSnackbarSeverity("error");
       setSnackbarOpen(true);
-      console.error("Error saving theme:", error);
+      return;
     }
-  };
-
+ 
+    const themeData = {
+      themeName,
+      accentColor: newAccentColor,
+      buttonColor: newButtonColor,
+      hoverColor: newHoverColor,
+      baseColor: newBaseColor,
+      accentFontColor: newAccentFontColor,
+      buttonFontColor: newButtonFontColor,
+      hoverFontColor: newHoverFontColor,
+      baseFontColor: newBaseFontColor,
+    };
+  
+    await dispatch(createColorTheme(themeData));
+    setIsOpen(false);
+    setAccentColor(newAccentColor);
+    setButtonColor(newButtonColor);
+    setHoverColor(newHoverColor);
+    setBaseColor(newBaseColor);
+    setAccentFontColor(newAccentFontColor);
+    setButtonFontColor(newButtonFontColor);
+    setHoverFontColor(newHoverFontColor);
+    setBaseFontColor(newBaseFontColor);
+ 
+    handleGenerateEmbedCode();
+ 
+  } catch (error) {
+    setSnackbarMessage("Something went wrong");
+    setSnackbarSeverity("error");
+    setSnackbarOpen(true);
+    console.error("Error saving theme:", error);
+  }
+};
   const handleCancelDialog = () => {
     setIsOpen(false);
     setThemeName(previousThemeName);
@@ -189,31 +193,31 @@ function Codegenerator() {
     setSnackbarOpen(false);
   };
 
-const handleGenerateEmbedCode = () => {
-  const config = {
-    product: selectedProducts,
-    colors: {
-      accentColor,
-      buttonColor,
-      hoverColor,
-      baseColor,
-      accentFontColor,
-      buttonFontColor,
-      hoverFontColor,
-      baseFontColor,
-    },
+  const handleGenerateEmbedCode = () => {
+    const config = {
+      product: selectedProducts,
+      colors: {
+        accentColor,
+        buttonColor,
+        hoverColor,
+        baseColor,
+        accentFontColor,
+        buttonFontColor,
+        hoverFontColor,
+        baseFontColor,
+      },
+    };
+
+    const encodedConfig = btoa(JSON.stringify(config));
+
+    const url = `${EMBED_BASE_URL}/illustration/${encodeURIComponent(encodedConfig)}`;
+
+    if (url !== iframeUrl) {
+      setIframeUrl(url);
+      setShowEmbedCode(true);
+      setIframeLoading(true);
+    }
   };
-
-  const encodedConfig = btoa(JSON.stringify(config));
-
-  const url = `${EMBED_BASE_URL}/illustration/${encodeURIComponent(encodedConfig)}`;
-
-  if (url !== iframeUrl) {
-    setIframeUrl(url);
-    setShowEmbedCode(true);
-    setIframeLoading(true);
-  }
-};
 
 
   return (
@@ -366,155 +370,156 @@ const handleGenerateEmbedCode = () => {
                         new color theme
                       </Button>
                     </Box>
-                  <Dialog
-  open={isOpen}
-  onClose={() => setIsOpen(false)}
-  PaperProps={{
-    className: "dialogBox",
-  }}
-  disableScrollLock={true}
->
-  <Typography
-    variant="h6"
-    className="dialog-title"
-  >
-    Create new color theme
-  </Typography>
+                    <Dialog
+                      open={isOpen}
+                      onClose={() => setIsOpen(false)}
+                      PaperProps={{
+                        className: "dialogBox",
+                      }}
+                      disableScrollLock={true}
+                    >
+                      <Typography
+                        variant="h6"
+                        className="dialog-title"
+                      >
+                        Create New Color Theme
+                      </Typography>
 
-  <Box
-    display="flex"
-    flexDirection="column"
-    gap={2}
-    sx={{ mb: 2 }}
-  >
-    <TextField
-      fullWidth
-      label="Theme Name"
-      type="text"
-      value={themeName}
-      onChange={(e) => setThemeName(e.target.value)}
-    />
-    
-    {/* Background and Font Colors in one row */}
-    <Box display="flex" gap={2}>
-      {/* Background Colors */}
-      <Box flex={1}>
-        <Typography variant="subtitle1" fontWeight="bold" mb={2}>
-          Background Colors
-        </Typography>
-        <Box className="color-customization-inputs">
-          <TextField
-            fullWidth
-            label="Accent Color"
-            type="color"
-            value={newAccentColor}
-            onChange={(e) => setNewAccentColor(e.target.value)}
-            InputLabelProps={{ shrink: true }}
-          />
-          <TextField
-            fullWidth
-            label="Button Color"
-            type="color"
-            value={newButtonColor}
-            onChange={(e) => setNewButtonColor(e.target.value)}
-            InputLabelProps={{ shrink: true }}
-          />
-          <TextField
-            fullWidth
-            label="Hover Color"
-            type="color"
-            value={newHoverColor}
-            onChange={(e) => setNewHoverColor(e.target.value)}
-            InputLabelProps={{ shrink: true }}
-          />
-          <TextField
-            fullWidth
-            label="Base Color"
-            type="color"
-            value={newBaseColor}
-            onChange={(e) => setNewBaseColor(e.target.value)}
-            InputLabelProps={{ shrink: true }}
-          />
-        </Box>
-      </Box>
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        gap={2}
+                        sx={{ mb: 1.2 }}
+                      >
+                        <TextField
+                          fullWidth
+                          label="Theme Name"
+                          type="text"
+                          value={themeName}
+                          onChange={(e) => setThemeName(e.target.value)}
+                        />
 
-      {/* Font Colors */}
-      <Box flex={1}>
-        <Typography variant="subtitle1" fontWeight="bold" mb={2}>
-          Font Colors
-        </Typography>
-        <Box className="color-customization-inputs">
-          <TextField
-            fullWidth
-            label="Accent Font Color"
-            type="color"
-            value={newAccentFontColor}
-            onChange={(e) =>
-              setNewAccentFontColor(e.target.value)
-            }
-            InputLabelProps={{ shrink: true }}
-          />
-          <TextField
-            fullWidth
-            label="Button Font Color"
-            type="color"
-            value={newButtonFontColor}
-            onChange={(e) =>
-              setNewButtonFontColor(e.target.value)
-            }
-            InputLabelProps={{ shrink: true }}
-          />
-          <TextField
-            fullWidth
-            label="Hover Font Color"
-            type="color"
-            value={newHoverFontColor}
-            onChange={(e) =>
-              setNewHoverFontColor(e.target.value)
-            }
-            InputLabelProps={{ shrink: true }}
-          />
-          <TextField
-            fullWidth
-            label="Base Font Color"
-            type="color"
-            value={newBaseFontColor}
-            onChange={(e) =>
-              setNewBaseFontColor(e.target.value)
-            }
-            InputLabelProps={{ shrink: true }}
-          />
-        </Box>
-      </Box>
-    </Box>
-  </Box>
+                        {/* Background and Font Colors in one row */}
+                        <Box display="flex" gap={2}>
+                          {/* Background Colors */}
+                          <Box flex={1} mb={2}>
+                            <Typography variant="subtitle1" fontWeight="bold" mb={2}>
+                              Background Colors
+                            </Typography>
+                            <Box className="color-customization-inputs">
+                              <TextField
+                                fullWidth
+                                label="Accent Color"
+                                type="color"
+                                value={newAccentColor}
+                                onChange={(e) => setNewAccentColor(e.target.value)}
+                                InputLabelProps={{ shrink: true }}
+                              />
+                              <TextField
+                                fullWidth
+                                label="Button Color"
+                                type="color"
+                                value={newButtonColor}
+                                onChange={(e) => setNewButtonColor(e.target.value)}
+                                InputLabelProps={{ shrink: true }}
+                              />
+                              <TextField
+                                fullWidth
+                                label="Hover Color"
+                                type="color"
+                                value={newHoverColor}
+                                onChange={(e) => setNewHoverColor(e.target.value)}
+                                InputLabelProps={{ shrink: true }}
+                              />
+                              <TextField
+                                fullWidth
+                                label="Base Color"
+                                type="color"
+                                value={newBaseColor}
+                                onChange={(e) => setNewBaseColor(e.target.value)}
+                                InputLabelProps={{ shrink: true }}
+                              />
+                            </Box>
+                          </Box>
 
-  <Box
-    display="flex"
-    justifyContent="space-between"
-    gap={2}
-  >
-    <Button
-      variant="outlined"
-      color="error"
-      fullWidth
-      onClick={handleCancelDialog}
-    >
-      Cancel
-    </Button>
-    <Button
-      variant="contained"
-      fullWidth
-      onClick={handleSaveTheme}
-      sx={{
-        backgroundColor: "#11233E",
-        "&:hover": { backgroundColor: "#0a1a2f" },
-      }}
-    >
-      Save
-    </Button>
-  </Box>
-</Dialog>
+                          {/* Font Colors */}
+                          <Box flex={1}>
+                            <Typography variant="subtitle1" fontWeight="bold" mb={2}>
+                              Font Colors
+                            </Typography>
+                            <Box className="color-customization-inputs">
+                              <TextField
+                                fullWidth
+                                label="Accent Font Color"
+                                type="color"
+                                value={newAccentFontColor}
+                                onChange={(e) =>
+                                  setNewAccentFontColor(e.target.value)
+                                }
+                                InputLabelProps={{ shrink: true }}
+                              />
+                              <TextField
+                                fullWidth
+                                label="Button Font Color"
+                                type="color"
+                                value={newButtonFontColor}
+                                onChange={(e) =>
+                                  setNewButtonFontColor(e.target.value)
+                                }
+                                InputLabelProps={{ shrink: true }}
+                              />
+                              <TextField
+                                fullWidth
+                                label="Hover Font Color"
+                                type="color"
+                                value={newHoverFontColor}
+                                onChange={(e) =>
+                                  setNewHoverFontColor(e.target.value)
+                                }
+                                InputLabelProps={{ shrink: true }}
+                              />
+                              <TextField
+                                fullWidth
+                                label="Base Font Color"
+                                type="color"
+                                value={newBaseFontColor}
+                                onChange={(e) =>
+                                  setNewBaseFontColor(e.target.value)
+                                }
+                                InputLabelProps={{ shrink: true }}
+                              />
+                            </Box>
+                          </Box>
+                        </Box>
+                      </Box>
+
+                      <Box
+                        display="flex"
+                        justifyContent="space-between"
+                        gap={2}
+                        mb={1.2}
+                      >
+                        <Button
+                          variant="outlined"
+                          color="error"
+                          fullWidth
+                          onClick={handleCancelDialog}
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          variant="contained"
+                          fullWidth
+                          onClick={handleSaveTheme}
+                          sx={{
+                            backgroundColor: "#11233E",
+                            "&:hover": { backgroundColor: "#0a1a2f" },
+                          }}
+                        >
+                          Save
+                        </Button>
+                      </Box>
+                    </Dialog>
                     {themeName === "custom" ? (
                       <>
                         <Typography
@@ -613,7 +618,7 @@ const handleGenerateEmbedCode = () => {
                               variant="subtitle1"
                               fontWeight="bold"
                             >
-                              Selected Theme:
+                              Selected Theme:{" "}
                               {themes.find((t) => t.themeName === themeName)
                                 ?.themeName || "No Theme Selected"}
                             </Typography>
