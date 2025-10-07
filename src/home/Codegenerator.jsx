@@ -58,11 +58,10 @@ function Codegenerator() {
   const [activeTab, setActiveTab] = useState("code");
   const [isOpen, setIsOpen] = useState(false);
   const [themeName, setThemeName] = useState("Life Innovator");
-  // const [themes, setThemes] = useState([]);
-const dispatch = useDispatch();
-const { themes, loading, error, successMessage } = useSelector((state) => state.colorThemes);
+  const dispatch = useDispatch();
+  const { themes, loading, error, successMessage } = useSelector((state) => state.colorThemes);
   const [loadingg, setLoadingg] = useState(loading);
-
+  
   const handleProductToggle = (productId) => {
     setSelectedProducts((prev) =>
       prev.includes(productId)
@@ -83,8 +82,8 @@ const { themes, loading, error, successMessage } = useSelector((state) => state.
     setThemeName("");
   };
 
- const handleSaveTheme = async () => {
-  try{
+  const handleSaveTheme = async () => {
+    try {
       if (!themeName.trim()) {
         setSnackbarMessage("Please enter theme name");
         setSnackbarSeverity("error");
@@ -92,58 +91,51 @@ const { themes, loading, error, successMessage } = useSelector((state) => state.
         return;
       }
 
-     dispatch(createColorTheme({
-    themeName,
-    accentColor: newAccentColor,
-    buttonColor: newButtonColor,
-    hoverColor: newHoverColor,
-    baseColor: newBaseColor,
-  }));
- 
+      dispatch(createColorTheme({
+        themeName,
+        accentColor: newAccentColor,
+        buttonColor: newButtonColor,
+        hoverColor: newHoverColor,
+        baseColor: newBaseColor,
+      }));
 
-   setSnackbarMessage( "Theme created successfully");
+
+      setSnackbarMessage("Theme created successfully");
       setSnackbarSeverity("success");
       setSnackbarOpen(true);
       setIsOpen(false);
     } catch (error) {
-      setSnackbarMessage(
-         "Something went wrong"
-      );
+      setSnackbarMessage("Something went wrong");
       setSnackbarSeverity("error");
       setSnackbarOpen(true);
       console.error("Error saving theme:", error);
     }
+  };
 
- 
-};
-
- useEffect(() => {
-  dispatch(fetchColorThemes());
-}, [dispatch]);
-
-
-
+  useEffect(() => {
+    dispatch(fetchColorThemes());
+  }, [dispatch]);
 
   const generateEmbedCode = () => {
     return `<iframe id="crossDomainIframe" src="${iframeUrl}" width="100%" height="600" frameborder="0"></iframe>
     <script src="https://demos.godigitalalchemy.com/illustrata/embed/autoheight.js"></script>`;
   };
 
- const copyToClipboard = () => {
-  navigator.clipboard
-    .writeText(generateEmbedCode())
-    .then(() => {
-      setSnackbarMessage("Embed code copied to clipboard!");
-      setSnackbarSeverity("success");
-      setSnackbarOpen(true);
-    })
-    .catch((err) => {
-      setSnackbarMessage("Failed to copy embed code");
-      setSnackbarSeverity("error");
-      setSnackbarOpen(true);
-      console.error("Failed to copy: ", err);
-    });
-};
+  const copyToClipboard = () => {
+    navigator.clipboard
+      .writeText(generateEmbedCode())
+      .then(() => {
+        setSnackbarMessage("Embed code copied to clipboard!");
+        setSnackbarSeverity("success");
+        setSnackbarOpen(true);
+      })
+      .catch((err) => {
+        setSnackbarMessage("Failed to copy embed code");
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+        console.error("Failed to copy: ", err);
+      });
+  };
 
 
   const handleSnackbarClose = (event, reason) => {
@@ -203,9 +195,8 @@ const { themes, loading, error, successMessage } = useSelector((state) => state.
                           return (
                             <ListItem
                               key={product.id}
-                              className={`product-list-item ${
-                                selected ? "selected" : ""
-                              }`}
+                              className={`product-list-item ${selected ? "selected" : ""
+                                }`}
                               onClick={() => handleProductToggle(product.id)}
                             >
                               <ListItemText
@@ -289,7 +280,7 @@ const { themes, loading, error, successMessage } = useSelector((state) => state.
                         </Select>
                       </FormControl>
 
-      
+
                       <Button
                         variant="outlined"
                         onClick={handleOpenDialog}
@@ -304,7 +295,7 @@ const { themes, loading, error, successMessage } = useSelector((state) => state.
                       open={isOpen}
                       onClose={() => setIsOpen(false)}
                       PaperProps={{
-                       className:"dialogBox"
+                        className: "dialogBox"
                       }}
                     >
                       <Typography
@@ -329,37 +320,37 @@ const { themes, loading, error, successMessage } = useSelector((state) => state.
                         />
                         <Box className="color-customization-inputs">
                           <TextField
-                          fullWidth
-                          label="Accent Color"
-                          type="color"
-                          value={newAccentColor}
-                          onChange={(e) => setNewAccentColor(e.target.value)}
-                          InputLabelProps={{ shrink: true }}
-                        />
-                        <TextField
-                          fullWidth
-                          label="Button Color"
-                          type="color"
-                          value={newButtonColor}
-                          onChange={(e) => setNewButtonColor(e.target.value)}
-                          InputLabelProps={{ shrink: true }}
-                        />
-                        <TextField
-                          fullWidth
-                          label="Hover Color"
-                          type="color"
-                          value={newHoverColor}
-                          onChange={(e) => setNewHoverColor(e.target.value)}
-                          InputLabelProps={{ shrink: true }}
-                        />
-                        <TextField
-                          fullWidth
-                          label="Base Color"
-                          type="color"
-                          value={newBaseColor}
-                          onChange={(e) => setNewBaseColor(e.target.value)}
-                          InputLabelProps={{ shrink: true }}
-                        />
+                            fullWidth
+                            label="Accent Color"
+                            type="color"
+                            value={newAccentColor}
+                            onChange={(e) => setNewAccentColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                          <TextField
+                            fullWidth
+                            label="Button Color"
+                            type="color"
+                            value={newButtonColor}
+                            onChange={(e) => setNewButtonColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                          <TextField
+                            fullWidth
+                            label="Hover Color"
+                            type="color"
+                            value={newHoverColor}
+                            onChange={(e) => setNewHoverColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                          <TextField
+                            fullWidth
+                            label="Base Color"
+                            type="color"
+                            value={newBaseColor}
+                            onChange={(e) => setNewBaseColor(e.target.value)}
+                            InputLabelProps={{ shrink: true }}
+                          />
                         </Box>
                       </Box>
 
@@ -430,68 +421,68 @@ const { themes, loading, error, successMessage } = useSelector((state) => state.
                         variant="outlined"
                         className="color-settings-panel"
                       >
-                      <Box className="color-settings-header">
-  <Typography  gutterBottom>
-    {themes.find((t) => t.themeName === themeName)?.themeName || "No Theme Selected"}
-  </Typography>
-</Box>
+                        <Box className="color-settings-header">
+                          <Typography gutterBottom>
+                            {themes.find((t) => t.themeName === themeName)?.themeName || "No Theme Selected"}
+                          </Typography>
+                        </Box>
 
-{(() => {
-  const selectedTheme = themes.find((t) => t.themeName === themeName);
-  if (!selectedTheme) return null;
+                        {(() => {
+                          const selectedTheme = themes.find((t) => t.themeName === themeName);
+                          if (!selectedTheme) return null;
 
-  return (
-    <Grid container spacing={2}>
-      <Grid item xs={6}>
-        <Box className="color-preview">
-          <Box
-            className="color-circle"
-            style={{ backgroundColor: selectedTheme.accentColor }}
-          />
-          <Typography variant="subtitle2">
-            Accent: {selectedTheme.accentColor}
-          </Typography>
-        </Box>
-      </Grid>
+                          return (
+                            <Grid container spacing={2}>
+                              <Grid item xs={6}>
+                                <Box className="color-preview">
+                                  <Box
+                                    className="color-circle"
+                                    style={{ backgroundColor: selectedTheme.accentColor }}
+                                  />
+                                  <Typography variant="subtitle2">
+                                    Accent: {selectedTheme.accentColor}
+                                  </Typography>
+                                </Box>
+                              </Grid>
 
-      <Grid item xs={6}>
-        <Box className="color-preview">
-          <Box
-            className="color-circle"
-            style={{ backgroundColor: selectedTheme.buttonColor }}
-          />
-          <Typography variant="subtitle2">
-            Button: {selectedTheme.buttonColor}
-          </Typography>
-        </Box>
-      </Grid>
+                              <Grid item xs={6}>
+                                <Box className="color-preview">
+                                  <Box
+                                    className="color-circle"
+                                    style={{ backgroundColor: selectedTheme.buttonColor }}
+                                  />
+                                  <Typography variant="subtitle2">
+                                    Button: {selectedTheme.buttonColor}
+                                  </Typography>
+                                </Box>
+                              </Grid>
 
-      <Grid item xs={6}>
-        <Box className="color-preview">
-          <Box
-            className="color-circle"
-            style={{ backgroundColor: selectedTheme.hoverColor }}
-          />
-          <Typography variant="subtitle2">
-            Hover: {selectedTheme.hoverColor}
-          </Typography>
-        </Box>
-      </Grid>
+                              <Grid item xs={6}>
+                                <Box className="color-preview">
+                                  <Box
+                                    className="color-circle"
+                                    style={{ backgroundColor: selectedTheme.hoverColor }}
+                                  />
+                                  <Typography variant="subtitle2">
+                                    Hover: {selectedTheme.hoverColor}
+                                  </Typography>
+                                </Box>
+                              </Grid>
 
-      <Grid item xs={6}>
-        <Box className="color-preview">
-          <Box
-            className="color-circle"
-            style={{ backgroundColor: selectedTheme.baseColor }}
-          />
-          <Typography variant="subtitle2">
-            Base: {selectedTheme.baseColor}
-          </Typography>
-        </Box>
-      </Grid>
-    </Grid>
-  );
-})()}
+                              <Grid item xs={6}>
+                                <Box className="color-preview">
+                                  <Box
+                                    className="color-circle"
+                                    style={{ backgroundColor: selectedTheme.baseColor }}
+                                  />
+                                  <Typography variant="subtitle2">
+                                    Base: {selectedTheme.baseColor}
+                                  </Typography>
+                                </Box>
+                              </Grid>
+                            </Grid>
+                          );
+                        })()}
 
                       </Paper>
                     )}
@@ -625,7 +616,7 @@ const { themes, loading, error, successMessage } = useSelector((state) => state.
                                 gutterBottom
                               >
                                 {selectedProducts &&
-                                selectedProducts.length === 0
+                                  selectedProducts.length === 0
                                   ? "Select at least one product to see preview"
                                   : "Loading preview..."}
                               </Typography>

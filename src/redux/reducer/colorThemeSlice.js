@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_API_URL } from "../../constants/constants";
 
-//  Fetch all color themes
 export const fetchColorThemes = createAsyncThunk(
   "colorThemes/fetchColorThemes",
   async (_, { rejectWithValue }) => {
@@ -15,13 +14,12 @@ export const fetchColorThemes = createAsyncThunk(
   }
 );
 
-//  Create a new color theme
 export const createColorTheme = createAsyncThunk(
   "colorThemes/createColorTheme",
   async (themeData, { rejectWithValue }) => {
     try {
       const res = await axios.post(`${BASE_API_URL}/api/color-themes`, themeData);
-      return res.data.data; // Assuming API returns the created theme
+      return res.data.data; 
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || "Failed to create theme");
     }
@@ -44,7 +42,6 @@ const colorThemeSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      //  Fetch themes
       .addCase(fetchColorThemes.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -57,7 +54,6 @@ const colorThemeSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      //  Create theme
       .addCase(createColorTheme.pending, (state) => {
         state.loading = true;
         state.error = null;
